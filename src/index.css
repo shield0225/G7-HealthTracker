@@ -11,3 +11,27 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.text-small {
+  font-size: 12px;
+}
+
+.text-medium {
+  font-size: 16px;
+}
+
+.text-med {
+  font-size: 14px;
+}
+
+.text-large {
+  font-size: 24px;
+}
+
+.icon-spacing {
+  margin-right: 15px;
+}
+
+img.hover-opacity:hover {
+  opacity: 0.5;
+}
