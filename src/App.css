@@ -72,15 +72,31 @@ img.semi-transparent {
   opacity: 0.5;
 }
 
-.nav-link {
-  color: #fff;
-  margin: 0 10px;
-  text-decoration: none;
-}
-
 .image-size {
   width: 150px;
   height: 200px;
   padding: 0% 0% 0% 0%;
   margin-bottom: 15px;
+}
+
+.home-content {
+  position: relative;
+    width: 100%;
+    height: auto;
+}
+
+.image-container {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.image-container .img-fluid {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.image-container .semi-transparent {
+  opacity: 0.9;
 }
