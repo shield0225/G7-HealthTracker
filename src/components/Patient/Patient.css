@@ -1,0 +1,12 @@
+.patient-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+}
+
+.dashboard {
+    flex-grow: 1;
+}
