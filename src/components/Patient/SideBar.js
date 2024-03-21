@@ -22,7 +22,7 @@ function SideBar({ activeComponent, setActiveComponent }) {
           onClick={() => setActiveComponent("Dashboard")}
           className={"side-item ${getActiveClass('Dashboard')}"}
         >
-          <Col s={2}>
+          <Col s={1}>
             <VscDashboard className="side-icon" />
           </Col>
           <Col xs={11}>
@@ -34,7 +34,7 @@ function SideBar({ activeComponent, setActiveComponent }) {
           onClick={() => setActiveComponent("Stats")}
           className={"side-item ${getActiveClass('Stats')}"}
         >
-          <Col s={2}>
+          <Col s={1}>
             <FcStatistics className="side-icon" />
           </Col>
           <Col xs={11}>
@@ -46,7 +46,7 @@ function SideBar({ activeComponent, setActiveComponent }) {
           onClick={() => setActiveComponent("Symptoms")}
           className={"side-item ${getActiveClass('Symptoms')}"}
         >
-          <Col s={2}>
+          <Col s={1}>
             <RiBodyScanLine className="side-icon" />
           </Col>
           <Col xs={11}>
@@ -58,7 +58,7 @@ function SideBar({ activeComponent, setActiveComponent }) {
           onClick={() => setActiveComponent("Notifications")}
           className={"side-item ${getActiveClass('Notifications')}"}
         >
-          <Col s={2}>
+          <Col s={1}>
             <IoMdNotifications className="side-icon" />
           </Col>
           <Col xs={11}>
@@ -70,7 +70,7 @@ function SideBar({ activeComponent, setActiveComponent }) {
           onClick={() => setActiveComponent("Requests")}
           className={"side-item ${getActiveClass('Requests')}"}
         >
-          <Col s={2}>
+          <Col s={1}>
             <CiSquareQuestion className="side-icon" />
           </Col>
           <Col xs={11}>
@@ -82,7 +82,7 @@ function SideBar({ activeComponent, setActiveComponent }) {
           onClick={() => setActiveComponent("Preferences")}
           className={"side-item ${getActiveClass('Preferences')}"}
         >
-          <Col s={2}>
+          <Col s={1}>
             <MdOutlineRoomPreferences className="side-icon" />
           </Col>
           <Col xs={11}>
@@ -94,24 +94,25 @@ function SideBar({ activeComponent, setActiveComponent }) {
           onClick={() => setActiveComponent("PersonalInfo")}
           className={"side-item ${getActiveClass('PersonalInfo')}"}
         >
-          <Col s={2}>
+          <Col s={1}>
             <IoPerson className="side-icon" />
           </Col>
           <Col xs={11}>
             <span className="label">Personal Info</span>
           </Col>
         </a>
+
+        <div className="sidebar-footer">
+          <a href="/logout" className="side-item">
+            <Col s={1}>
+              <FaSignOutAlt className="side-icon" />
+            </Col>
+            <Col xs={11}>
+              <span className="label">Log out</span>
+            </Col>
+          </a>
+        </div>
       </nav>
-      <div className="sidebar-footer">
-        <a href="/logout" className="side-item">
-          <Col s={2}>
-            <FaSignOutAlt className="side-icon" />
-          </Col>
-          <Col xs={11}>
-            <span className="label">Log out</span>
-          </Col>
-        </a>
-      </div>
     </div>
   );
 }

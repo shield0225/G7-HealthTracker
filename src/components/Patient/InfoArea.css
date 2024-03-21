@@ -13,7 +13,6 @@
     max-width: 100%;
     padding: 20px;
     margin-top: 20px;
-    flex-direction: row;
     height: auto;
     }
   
@@ -64,7 +63,7 @@
 
 .main-content {
   flex-grow: 1;
-  max-width: calc(90%);
+  max-width: calc(100% - 20%);
 }
 
 .card {
@@ -133,7 +132,7 @@
   
 .label {
   margin-right: 5px;
-  font-weight: regular; 
+  font-weight: normal; 
   margin-left: 10px;
 }
   
@@ -169,18 +168,18 @@
 
   0%,
   100% {
-    transform: scale(4);
+    transform: scale(1.2);
   }
 
   50% {
-    transform: scale(2);
+    transform: scale(2.5);
   }
 }
 
 .icon {
-  animation: growAndShrink 3s infinite ease-in-out;
+  animation: growAndShrink 4s infinite ease-in-out;
   margin-left: 8px;
-  height: 35px;
+  font-size: 24px;
 }
 
 .img .underconstruction {

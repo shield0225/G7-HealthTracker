@@ -124,10 +124,17 @@ function Stats() {
         <Col xs={1}></Col>
         <Col xs={11}>
           <i className="text-small">
-            * Readings consist of two numbers: systolic (the pressure when your
-            heart beats) over diastolic (the pressure when your heart is at rest
-            between beats), measured in millimeters of mercury (mmHg). Please
-            use a sphygmomanometer (a blood pressure cuff) or a stethoscope.
+            * Systolic (the pressure when heart beats) over diastolic (the
+            pressure when heart is at rest between beats){" "}
+          </i>
+          <br />
+          <i className="text-small">
+            * Measured in millimeters of mercury (mmHg).{" "}
+          </i>
+          <br />
+          <i className="text-small">
+            * Please use a sphygmomanometer (a blood pressure cuff) or a
+            stethoscope.
           </i>
         </Col>
       </Row>

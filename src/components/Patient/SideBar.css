@@ -1,6 +1,6 @@
 .sidebar {
-    max-width: 20%;
-    height: 100vh;
+    width: 20%;
+    height: 125vh;
     background-color: #f9f9f9;
     display: flex;
     flex-direction: column;
@@ -10,7 +10,7 @@
 
 @media (max-width: 768px) {
   .sidebar {
-    max-width: fit-content;
+    max-width: 15%;
     padding: 10px 5px;
   }
 
@@ -28,7 +28,7 @@
 
 }
 .sidebar-logo {
-    margin-bottom: w0px;
+    margin-bottom: 20px;
 }
 
 .sidebar-nav {
@@ -61,7 +61,7 @@
 }
 
 .label {
-  font-weight: regular; 
+  font-weight: normal; 
   margin-left: 40px;
 }
 
