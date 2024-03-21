@@ -14,9 +14,7 @@ function App() {
         <Routes>
           <Route index element={<Home />} />
           <Route path="home" element={<Home />} />
-          <Route path="patient" element={<Patient />} />
-          <Route path="personal" component={<Personal />} />
-          <Route path="stats" component={<Stats />} />
+          <Route path="patient-dashboard" element={<Patient />} />
         </Routes>
         <div className="container"></div>
       </Router>

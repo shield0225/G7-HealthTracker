@@ -1,12 +1,12 @@
 import React from "react";
 import "./Dashboard.css";
 
-function Dashboard() {
+function Notifications() {
   return (
     <>
-      <h1>Dashboard</h1>
+      <h1>Notifications</h1>
     </>
   );
 }
 
-export default Dashboard;
+export default Notifications;

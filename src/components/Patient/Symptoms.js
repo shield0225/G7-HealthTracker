@@ -1,12 +1,12 @@
 import React from "react";
 import "./Dashboard.css";
 
-function Dashboard() {
+function Symptoms() {
   return (
     <>
-      <h1>Dashboard</h1>
+      <h1>Symptoms</h1>
     </>
   );
 }
 
-export default Dashboard;
+export default Symptoms;
