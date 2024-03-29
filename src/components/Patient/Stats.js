@@ -27,7 +27,6 @@ function Stats() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
   };
   return (
     <Form className="form-container" onSubmit={handleSubmit}>
