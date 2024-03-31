@@ -1,5 +1,5 @@
 import React from "react";
-import "./Dashboard.css";
+import "./InfoArea.css";
 
 function Personal() {
   return (
