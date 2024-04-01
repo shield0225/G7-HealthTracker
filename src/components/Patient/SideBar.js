@@ -67,30 +67,6 @@ function SideBar({ activeComponent, setActiveComponent }) {
         </a>
         <a
           href
-          onClick={() => setActiveComponent("Requests")}
-          className={"side-item ${getActiveClass('Requests')}"}
-        >
-          <Col s={1}>
-            <CiSquareQuestion className="side-icon" />
-          </Col>
-          <Col xs={11}>
-            <span className="label">Requests</span>
-          </Col>
-        </a>
-        <a
-          href
-          onClick={() => setActiveComponent("Preferences")}
-          className={"side-item ${getActiveClass('Preferences')}"}
-        >
-          <Col s={1}>
-            <MdOutlineRoomPreferences className="side-icon" />
-          </Col>
-          <Col xs={11}>
-            <span className="label">Preferences</span>
-          </Col>
-        </a>
-        <a
-          href
           onClick={() => setActiveComponent("PersonalInfo")}
           className={"side-item ${getActiveClass('PersonalInfo')}"}
         >
