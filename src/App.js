@@ -1,6 +1,7 @@
 import "./App.css";
 import Home from "./components/Home";
 import Patient from "./components/Patient/Patient";
+import Nurse from "./components/Nurse/Nurse";
 import Personal from "./components/Patient/Personal";
 import Stats from "./components/Patient/Stats";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -15,6 +16,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="home" element={<Home />} />
           <Route path="patient" element={<Patient />} />
+          <Route path="nurse" element={<Nurse />} />          
         </Routes>
         <div className="container"></div>
       </Router>

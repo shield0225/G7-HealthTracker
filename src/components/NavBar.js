@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Nav, Navbar, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./NavBar.css";
@@ -6,6 +6,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import homepagephoto from "../assets/homepage-photo.jpg";
 
 function NavBar({ onLoginClick, onRegisterClick }) {
+  const [servicesExpanded, setServicesExpanded] = useState(false);
+
+  const toggleServices = () => {
+    setServicesExpanded(!servicesExpanded);
+  };
+
   return (
     <Navbar
       bg="light"
@@ -25,7 +31,12 @@ function NavBar({ onLoginClick, onRegisterClick }) {
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link as={Link} to="/services" eventkey="services">
+            <Nav.Link
+              as={Link}
+              to="/services"
+              eventkey="services"
+              onClick={toggleServices}
+            >
               Services
             </Nav.Link>
           </Nav.Item>
