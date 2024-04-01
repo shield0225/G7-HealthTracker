@@ -72,6 +72,15 @@ function Stats() {
         "Systolic pressure must be greater than diastolic pressure.";
     }
 
+    if (
+      Number(formData.respirationRate) < 10 ||
+      Number(formData.respirationRate) > 30
+    ) {
+      newErrors.respirationRate = "Respiratory rate must be between 10 to 30.";
+    } else {
+      delete newErrors.respirationRate;
+    }
+
     setErrors(newErrors);
 
     return Object.keys(newErrors).length === 0;
