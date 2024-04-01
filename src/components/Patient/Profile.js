@@ -6,7 +6,7 @@ function Profile({ activeComponent }) {
       <div className="profile-header">
         {" "}
         <img
-          src="https://d29fhpw069ctt2.cloudfront.net/clipart/99148/preview/patient_preview_804a.png"
+          src="https://image.kpopmap.com/2019/03/jisoo_profile_s_0215.jpg"
           alt="Profile"
           className="profile-image"
         />
