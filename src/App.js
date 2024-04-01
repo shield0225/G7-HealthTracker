@@ -17,13 +17,10 @@ function App() {
           <Route index element={<Home />} />
           <Route path="home" element={<Home />} />
           <Route path="patient" element={<Patient />} />
-<<<<<<< HEAD
           <Route path="personal" element={<Personal />} />
           <Route path="stats" element={<Stats />} />
           <Route path="users" element={<Users />} />
-=======
-          <Route path="nurse" element={<Nurse />} />          
->>>>>>> c2993dbda045c0bbedf825961437ee85e7e96965
+          <Route path="nurse" element={<Nurse />} />
         </Routes>
       </Router>
     </Container>
