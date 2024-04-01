@@ -1,12 +1,9 @@
 import React from 'react';
-import { Button, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import Chart from "react-apexcharts";
 import DashboardCard from './DashboardCard';
 import useWeeklyDate from '../../../hooks/WeeklyDateHook';
-import { getMonthScope, mapDatesToWeeklyLabel } from '../../../helpers/date-helper';
 import { patientData } from '../../../mock/patient-data';
 import { getHighestDiastolicBloodPresureByDate, getHighestSystolicBloodPresureByDate } from '../../../helpers/chart-helper';
-import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import WeekController from './WeekController';
 
 const OPTIONS_CHART = {

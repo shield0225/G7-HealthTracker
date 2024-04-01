@@ -3,7 +3,7 @@ import { gql, useQuery } from "@apollo/client";
 import { ListGroup, Spinner, Alert, Container } from "react-bootstrap";
 
 const GET_ALL_USERS = gql`
-  query GetAllUsers {
+  query Users {
     users {
       _id
       username
