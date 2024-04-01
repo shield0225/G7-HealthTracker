@@ -25,10 +25,64 @@ function Stats() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-  };
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const graphqlUrl = 'http://localhost:4000/graphql/';
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjA4ZWZjMDUwOGViMjliMDQ4ZWY4MWYiLCJ1c2VyVHlwZSI6Im51cnNlIiwiaWF0IjoxNzExODYxOTY0LCJleHAiOjE3NDM0MTk1NjR9.j9wpnJzWWEnJgoYKXrQlQBiwNHIs0mdsnLIxEIYTpRE';
+
+  // Construct the mutation query
+  //${formData.bloodPressureSystolic}
+  const mutation = `
+  mutation {
+    addVitalsInformation(
+      _id: "6608efc4508eb29b048ef82a"
+      bodyTemperature: ${formData.bodyTemperature}
+      heartRate:  ${formData.heartRate}
+      systolicBloodPresure: ${formData.bloodPressureSystolic}
+      diastolicBloodPresure: ${formData.bloodPressureDiastolic}   
+      respirationRate: ${formData.respirationRate}
+      weight: ${formData.weight}
+    ) {
+      _id
+      bodyTemperature
+      heartRate
+      systolicBloodPresure
+      diastolicBloodPresure
+      respirationRate
+      weight
+    }
+  }
+  
+  `;
+
+  try {
+    // Send the mutation request
+    const response = await fetch(graphqlUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, // Pass the token in the Authorization header
+      },
+      body: JSON.stringify({ query: mutation }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch');
+    }
+
+    // Parse the response JSON
+    const responseData = await response.json();
+
+    // Log the response data
+    console.log(responseData);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+  
+    
   return (
     <Form className="form-container" onSubmit={handleSubmit}>
       <Row className=" form-field align-items-left">
@@ -110,6 +164,9 @@ function Stats() {
             type="number"
             name="bloodPressureSystolic"
             className="mb-2 input-field"
+            id="bloodPressureSystolic"
+            value={formData.bloodPressureSystolic}
+            onChange={handleChange}
           />
         </Col>
         <Col xs={5}>
@@ -118,6 +175,9 @@ function Stats() {
             type="number"
             name="bloodPressureDiastolic"
             className="input-field"
+            id="bloodPressureDiastolic"
+            value={formData.bloodPressureDiastolic}
+            onChange={handleChange}            
           />
         </Col>
         <Col xs={1}></Col>
