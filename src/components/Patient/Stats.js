@@ -12,8 +12,8 @@ function Stats() {
   const [formData, setFormData] = useState({
     bodyTemperature: "",
     heartRate: "",
-    systolicBloodPresure: "",
-    diastolicBloodPresure: "",
+    systolicBloodPressure: "",
+    diastolicBloodPressure: "",
     respirationRate: "",
     weight: "",
   });
@@ -108,7 +108,7 @@ function Stats() {
           <Form.Label className="label">Systolic:</Form.Label>
           <Form.Control
             type="number"
-            name="systolicBloodPresure"
+            name="systolicBloodPressure"
             className="mb-2 input-field"
           />
         </Col>
@@ -116,7 +116,7 @@ function Stats() {
           <Form.Label className="label">Diastolic:</Form.Label>
           <Form.Control
             type="number"
-            name="diastolicBloodPresure"
+            name="diastolicBloodPressure"
             className="input-field"
           />
         </Col>
