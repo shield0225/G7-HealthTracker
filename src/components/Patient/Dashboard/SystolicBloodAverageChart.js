@@ -1,13 +1,13 @@
 import { Avatar, Fab, Stack, Typography, useTheme } from "@mui/material";
-import { IconArrowDownRight, IconArrowUpLeft, IconCurrencyDollar, IconDropletPlus, IconStethoscope } from "@tabler/icons-react";
+import { IconArrowDownRight, IconArrowUpLeft, IconDropletPlus, IconStethoscope } from "@tabler/icons-react";
 import DashboardCard from "./DashboardCard";
 import Chart from "react-apexcharts";
-import { filterGroupedDataByWeekDates, getAverageDailyInformationByWeeks, getHighestSystolicBloodPresureByDate } from "../../../helpers/chart-helper";
+import { filterGroupedDataByWeekDates, getHighestSystolicBloodPresureByDate } from "../../../helpers/chart-helper";
 import { patientData } from "../../../mock/patient-data";
 import { generateWeekDates, getStartOfWeek, subtractWeeks } from "../../../helpers/date-helper";
 import { calculatePercentageHigher } from "../../../helpers/number-helper";
 
-const MonthlyEarnings = () => {
+const SystolicBloodAverageChart = () => {
     // chart color
     const theme = useTheme();
     const secondary = theme.palette.secondary.main;
@@ -130,4 +130,4 @@ const MonthlyEarnings = () => {
     );
 };
 
-export default MonthlyEarnings;
+export default SystolicBloodAverageChart;

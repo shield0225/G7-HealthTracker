@@ -1,4 +1,3 @@
-import moment from 'moment';
 import { formatDay, getStartOfWeek, subtractWeeks } from './date-helper';
 
 const groupDailyInformation = (dailyInformation = [], propName, filterCallback) => {
