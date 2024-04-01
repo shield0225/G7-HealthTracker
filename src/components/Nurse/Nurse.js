@@ -5,10 +5,10 @@ import Dashboard from "./Dashboard";
 import Stats from "./Stats";
 import Symptoms from "./Symptoms";
 import Notifications from "./Notifications";
-import "./Patient.css";
+import "./Nurse.css";
 import Profile from "./Profile";
 
-function Patient() {
+function Nurse() {
   const [activeComponent, setActiveComponent] = useState("Dashboard");
 
   const renderComponent = () => {
@@ -28,7 +28,7 @@ function Patient() {
   return (
     <>
       <NavBar />
-      <div className="patient-container">
+      <div className="nurse-container">
         <SideBar setActiveComponent={setActiveComponent} />
         <div className="main-content">
           <Profile activeComponent={activeComponent} />
@@ -40,4 +40,4 @@ function Patient() {
   );
 }
 
-export default Patient;
+export default Nurse;
