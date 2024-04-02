@@ -1,5 +1,7 @@
 import React from "react";
 import "./SideBar.css";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../Auth/AuthContext";
 import { Col } from "react-bootstrap";
 import { VscDashboard } from "react-icons/vsc";
 import { FcStatistics } from "react-icons/fc";
@@ -11,7 +13,8 @@ import { RiBodyScanLine } from "react-icons/ri";
 import { FaSignOutAlt } from "react-icons/fa";
 
 function SideBar({ activeComponent, setActiveComponent }) {
-  //const getActiveClass = (name) => activeComponent === name ? "active" : "";
+  const navigate = useNavigate();
+  const { isLoggedIn, logout } = useAuth();
 
   return (
     <div className="sidebar">
@@ -103,7 +106,7 @@ function SideBar({ activeComponent, setActiveComponent }) {
         </a>
 
         <div className="sidebar-footer">
-          <a href="/logout" className="side-item">
+          <a href="/home" className="side-item" onClick={logout}>
             <Col s={1}>
               <FaSignOutAlt className="side-icon" />
             </Col>

@@ -189,3 +189,9 @@
   width: 100%;
   height: auto;
 }
+
+.error-message {
+  color: red;
+  font-size: 0.8em;
+  margin-top: 0.25rem;
+}

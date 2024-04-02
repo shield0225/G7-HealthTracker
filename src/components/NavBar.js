@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Nav, Navbar, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useAuth } from "./Auth/AuthContext";
 import "./NavBar.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import homepagephoto from "../assets/homepage-photo.jpg";
@@ -11,6 +12,8 @@ function NavBar({ onLoginClick, onRegisterClick }) {
   const toggleServices = () => {
     setServicesExpanded(!servicesExpanded);
   };
+
+  const { isLoggedIn, logout } = useAuth();
 
   return (
     <Navbar
@@ -50,26 +53,36 @@ function NavBar({ onLoginClick, onRegisterClick }) {
               Contact Us
             </Nav.Link>
           </Nav.Item>
-          <Button
-            onClick={() => {
-              onRegisterClick();
-            }}
-            variant="outline-secondary"
-            className="ms-2 text-small button-custom-padding button-text-size"
-            eventkey="register"
-          >
-            Sign Up
-          </Button>
-          <Button
-            onClick={() => {
-              onLoginClick();
-            }}
-            variant="outline-secondary"
-            className="ms-2 text-small button-custom-padding button-text-size"
-            eventkey="login"
-          >
-            Log In
-          </Button>
+          {isLoggedIn ? (
+            <Nav.Item>
+              <Nav.Link as={Link} to="/profile" eventKey="profile">
+                <strong>Hello User</strong>
+              </Nav.Link>
+            </Nav.Item>
+          ) : (
+            <>
+              <Button
+                onClick={() => {
+                  onRegisterClick();
+                }}
+                variant="outline-secondary"
+                className="ms-2 text-small button-custom-padding button-text-size"
+                eventkey="register"
+              >
+                Sign Up
+              </Button>
+              <Button
+                onClick={() => {
+                  onLoginClick();
+                }}
+                variant="outline-secondary"
+                className="ms-2 text-small button-custom-padding button-text-size"
+                eventkey="login"
+              >
+                Log In
+              </Button>
+            </>
+          )}
         </Nav>
       </Navbar.Collapse>
     </Navbar>
