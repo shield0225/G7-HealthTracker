@@ -6,7 +6,7 @@ import { FaWeightScale } from "react-icons/fa6";
 import { TbHeartRateMonitor } from "react-icons/tb";
 import { ReactComponent as RespIcon } from "../../assets/material-symbols-light--respiratory-rate.svg";
 import { ReactComponent as BloodPressureIcon } from "../../assets/blood-pressure-icon.svg";
-import "bootstrap/dist/css/bootstrap.min.css";
+import validateStats from "../Validation";
 
 function Stats() {
   const [errors, setErrors] = useState({});
@@ -19,72 +19,6 @@ function Stats() {
     respirationRate: "",
     weight: "",
   });
-
-  const validateForm = () => {
-    let newErrors = {};
-
-    if (
-      Number(formData.bodyTemperature) < 30 ||
-      Number(formData.bodyTemperature) > 50
-    ) {
-      newErrors.bodyTemperature =
-        "Body temperature must be between 30°C and 50°C.";
-    } else {
-      delete newErrors.bodyTemperature;
-    }
-
-    if (Number(formData.heartRate) < 50 || Number(formData.heartRate) > 250) {
-      newErrors.heartRate = "Heart rate must be between 50 bpm and 250 bpm.";
-    } else {
-      delete newErrors.heartRate;
-    }
-
-    if (Number(formData.weight) < 10) {
-      newErrors.weight = "Weight must be at least 10 lbs.";
-    } else {
-      delete newErrors.weight;
-    }
-
-    if (!formData.systolicBloodPressure) {
-      newErrors.systolicBloodPressure = "Systolic blood pressure is required.";
-    } else if (Number(formData.systolicBloodPressure) <= 0) {
-      newErrors.systolicBloodPressure =
-        "Systolic blood pressure must be greater than 0.";
-    } else {
-      delete newErrors.systolicBloodPressure;
-    }
-
-    if (!formData.diastolicBloodPressure) {
-      newErrors.diastolicBloodPressure =
-        "Diastolic blood pressure is required.";
-    } else if (Number(formData.diastolicBloodPressure) <= 0) {
-      newErrors.diastolicBloodPressure =
-        "Diastolic blood pressure must be greater than 0.";
-    } else {
-      delete newErrors.diastolicBloodPressure;
-    }
-
-    if (
-      Number(formData.systolicBloodPressure) <=
-      Number(formData.diastolicBloodPressure)
-    ) {
-      newErrors.bloodPressure =
-        "Systolic pressure must be greater than diastolic pressure.";
-    }
-
-    if (
-      Number(formData.respirationRate) < 10 ||
-      Number(formData.respirationRate) > 30
-    ) {
-      newErrors.respirationRate = "Respiratory rate must be between 10 to 30.";
-    } else {
-      delete newErrors.respirationRate;
-    }
-
-    setErrors(newErrors);
-
-    return Object.keys(newErrors).length === 0;
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -103,19 +37,19 @@ function Stats() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) {
-      return;
-    }
-    const graphqlUrl = "http://localhost:4000/graphql/";
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjBhZGI2OWQxZTJjM2RmNWExMzA3NWUiLCJ1c2VyVHlwZSI6InBhdGllbnQiLCJpYXQiOjE3MTE5ODc1NjEsImV4cCI6MTc0MzU0NTE2MX0.c0vW0louK3MIVMAJgi3ED1oYTe12_4s1YXin1QILso0";
+    const validationErrors = validateStats(formData);
+    setErrors(validationErrors);
 
-    // Construct the mutation query
-    //${formData.bloodPressureSystolic}
-    const mutation = `
+    if (Object.keys(validationErrors).length === 0) {
+      const graphqlUrl = "http://localhost:4000/graphql/";
+      const token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjBiNTFjMDgyMTU4YjQzODgxMTJiZjYiLCJ1c2VyVHlwZSI6InBhdGllbnQiLCJpYXQiOjE3MTIwMTc4NTcsImV4cCI6MTc0MzU3NTQ1N30.-No3JmkOXdbhkbsvOyRg0c_IbVoecKjkRB2stYm9oY4";
+
+      // Construct the mutation query
+      //${formData.bloodPressureSystolic}
+      const mutation = `
   mutation {
     addVitalsInformation(
-      _id: "660adb69d1e2c3df5a13075e"
       bodyTemperature: ${formData.bodyTemperature}
       heartRate:  ${formData.heartRate}
       systolicBloodPressure: ${formData.systolicBloodPressure}
@@ -135,28 +69,29 @@ function Stats() {
   
   `;
 
-    try {
-      // Send the mutation request
-      const response = await fetch(graphqlUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
-        },
-        body: JSON.stringify({ query: mutation }),
-      });
+      try {
+        // Send the mutation request
+        const response = await fetch(graphqlUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+          },
+          body: JSON.stringify({ query: mutation }),
+        });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch");
+        if (!response.ok) {
+          throw new Error("Failed to fetch");
+        }
+
+        // Parse the response JSON
+        const responseData = await response.json();
+
+        // Log the response data
+        console.log(responseData);
+      } catch (error) {
+        console.error("Error:", error);
       }
-
-      // Parse the response JSON
-      const responseData = await response.json();
-
-      // Log the response data
-      console.log(responseData);
-    } catch (error) {
-      console.error("Error:", error);
     }
   };
 
@@ -177,10 +112,10 @@ function Stats() {
             placeholder="°C"
             isInvalid={!!errors.bodyTemperature}
           />
-          <i className="text-small">* Please measure your temperature in °C</i>
           {errors.bodyTemperature && (
             <div className="error-message">{errors.bodyTemperature}</div>
           )}
+          <i className="text-small">* Please measure your temperature in °C</i>
         </Col>
       </Row>
       <Row className=" form-field align-items-left">
@@ -198,10 +133,10 @@ function Stats() {
             placeholder="lbs"
             isInvalid={!!errors.weight}
           />
-          <i className="text-small">* Please measure your weight in lbs</i>
           {errors.weight && (
             <div className="error-message">{errors.weight}</div>
           )}
+          <i className="text-small">* Please measure your weight in lbs</i>
         </Col>
       </Row>
       <Row className=" form-field align-items-left">
@@ -219,6 +154,9 @@ function Stats() {
             placeholder="bpm"
             isInvalid={!!errors.heartRate}
           />
+          {errors.heartRate && (
+            <div className="error-message">{errors.heartRate}</div>
+          )}
           <i className="text-small">
             * Place two fingers (index and middle) on the inside of the{" "}
             <strong>wrist</strong> at the base of the thumb. Press lightly until
@@ -230,9 +168,6 @@ function Stats() {
             <strong>neck</strong>, just under the jawline. Be careful not to
             press too hard.
           </i>
-          {errors.heartRate && (
-            <div className="error-message">{errors.heartRate}</div>
-          )}
         </Col>
       </Row>
 
@@ -306,15 +241,15 @@ function Stats() {
             placeholder="breaths per minute"
             isInvalid={!!errors.respirationRate}
           />
+          {errors.respirationRate && (
+            <div className="error-message">{errors.respirationRate}</div>
+          )}
           <Col xs={1}></Col>
           <Col xs={11}>
             <i className="text-small">
               * Using a stopwatch or clock with a second hand, count the number
               of breaths for one full minute
             </i>
-            {errors.respirationRate && (
-              <div className="error-message">{errors.respirationRate}</div>
-            )}
           </Col>
         </Col>
       </Row>
