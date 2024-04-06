@@ -7,14 +7,17 @@ import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
 
 function Register({}) {
-  const [formData, setFormData] = useState({
+  // Initial state for resetting the form
+  const initialState = {
     firstName: "",
     lastName: "",
     email: "",
     password: "",
-    type: "patient",
+    type: "patient", // Assuming you always want this as the default selection
     dateOfBirth: "",
-  });
+  };
+
+  const [formData, setFormData] = useState(initialState);
   const { login, isLoggedIn, userType } = useAuth();
   const navigate = useNavigate();
 
@@ -37,6 +40,9 @@ function Register({}) {
     onCompleted: (data) => {
       console.log("Signup successful", data);
       console.log("token", data.signup.token);
+      // Reset the form data to the initial state
+      setFormData(initialState);
+      
     },
   });
 
@@ -51,11 +57,13 @@ function Register({}) {
   const handleSubmit = (e) => {
     e.preventDefault();
     signup({ variables: formData });
+    // Note: The formData reset is moved to the onCompleted callback
   };
 
   if (data) {
     console.log("Signup successful", data);
     console.log("token", data.signup.token);
+    // It's good practice to handle navigation or further actions here if needed
   }
 
   return (
@@ -120,9 +128,7 @@ function Register({}) {
               onChange={handleChange}
               required
             >
-              <option value="" disabled>
-                Select user type
-              </option>
+              <option value="" disabled>Select user type</option>
               <option value="patient">Patient</option>
               <option value="nurse">Nurse</option>
               {/* Add more options as needed */}
