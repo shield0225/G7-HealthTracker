@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
 import { useApolloClient } from "@apollo/client";
 import { LOGIN_MUTATION } from "../Utils/graphQLService";
 
@@ -8,6 +8,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const [userType, setUserType] = useState(null);
+  const [error, setError] = useState(null); // Error state added here
 
   const client = useApolloClient();
 
@@ -20,11 +21,13 @@ export const AuthProvider = ({ children }) => {
         setUserType(decoded.userType);
       } catch (error) {
         console.log("Error decoding the token: ", error);
+        logout(); // Clear token if invalid
       }
     }
   }, []);
 
   const login = async (formData) => {
+    setError(null); // Reset error state before new login attempt
     try {
       const { data } = await client.mutate({
         mutation: LOGIN_MUTATION,
@@ -34,9 +37,10 @@ export const AuthProvider = ({ children }) => {
       const decoded = jwtDecode(data.login.token);
       setIsLoggedIn(true);
       setUserType(decoded.userType);
-      console.log("User type: ", decoded.userType);
-      return decoded.userType;
     } catch (error) {
+      const message = error.graphQLErrors?.[0]?.message || 'Invalid Login! Please try again';
+      setError ({message}); // Update error state here
+      setIsLoggedIn(false); // Set as logged out on error
       console.error("Login error: ", error);
     }
   };
@@ -45,10 +49,11 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     setUserType(null);
+    setError(null); // Reset error on logout
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, userType, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, userType, login, logout, error }}>
       {children}
     </AuthContext.Provider>
   );
