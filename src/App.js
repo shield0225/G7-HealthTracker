@@ -5,6 +5,7 @@ import Nurse from "./components/Nurse/Nurse";
 import Personal from "./components/Patient/Personal";
 import Stats from "./components/Patient/Stats";
 import Users from "./components/Users/Users";
+import Game from "./components/Game/Game";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -21,6 +22,7 @@ function App() {
           <Route path="stats" element={<Stats />} />
           <Route path="users" element={<Users />} />
           <Route path="nurse" element={<Nurse />} />
+          <Route path="game" element={<Game />} />
         </Routes>
       </Router>
     </Container>
