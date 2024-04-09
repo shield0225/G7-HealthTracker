@@ -49,8 +49,8 @@ function NavBar({ onLoginClick, onRegisterClick }) {
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link as={Link} to="/contactus" eventkey="contactus">
-              Contact Us
+            <Nav.Link as={Link} to="/teampage" eventkey="teampage">
+              Team Page
             </Nav.Link>
           </Nav.Item>
           {isLoggedIn ? (

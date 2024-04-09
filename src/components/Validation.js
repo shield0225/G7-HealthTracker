@@ -1,4 +1,4 @@
-const validateStats = (formData) => {
+export const validateStats = (formData) => {
   let newErrors = {};
 
   if (
@@ -61,4 +61,53 @@ const validateStats = (formData) => {
   return newErrors;
 };
 
-export default validateStats;
+export const validateRegistration = (formData) => {
+  let newErrors = {};
+
+  // Check if email is already in the system
+  if (isEmailAlreadyRegistered(formData.email)) {
+    newErrors.email = "Email address is already registered.";
+  } else {
+    delete newErrors.email;
+  }
+
+  // Check password length
+  if (formData.password.length < 6) {
+    newErrors.password = "Must be at least 6 characters.";
+  } else {
+    delete newErrors.password;
+  }
+
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(formData.email)) {
+    newErrors.email = "Invalid email address.";
+  } else {
+    delete newErrors.email;
+  }
+
+  return newErrors;
+};
+
+const isEmailAlreadyRegistered = (email) => {
+  // TBD
+};
+
+export const validateLogin = (formData) => {
+  let newErrors = {};
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(formData.email)) {
+    newErrors.email = "Invalid email address.";
+  } else {
+    delete newErrors.email;
+  }
+
+  if (formData.password.length < 6) {
+    newErrors.password = "Must be at least 6 characters";
+  } else {
+    delete newErrors.password;
+  }
+
+  return newErrors;
+};

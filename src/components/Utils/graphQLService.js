@@ -1,5 +1,30 @@
 import { gql } from "@apollo/client";
 
+export const GET_USER = gql`
+  query Users {
+    me {
+      _id
+      email
+      firstName
+      lastName
+      type
+    }
+  }
+`;
+
+export const GET_ALL_USERS = gql`
+  query Users {
+    users {
+      _id
+      username
+      email
+      firstName
+      lastName
+      createdAt
+    }
+  }
+`;
+
 export const SIGNUP_MUTATION = gql`
   mutation Signup(
     $firstName: String!
@@ -30,27 +55,30 @@ export const LOGIN_MUTATION = gql`
   }
 `;
 
-export const GET_USER = gql`
-  query Users {
-    me {
+export const ADD_VITALS_INFORMATION = gql`
+  mutation AddVitalsInformation(
+    $bodyTemperature: Float!
+    $heartRate: Float!
+    $systolicBloodPressure: Float!
+    $diastolicBloodPressure: Float!
+    $respirationRate: Float!
+    $weight: Float!
+  ) {
+    addVitalsInformation(
+      bodyTemperature: $bodyTemperature
+      heartRate: $heartRate
+      systolicBloodPressure: $systolicBloodPressure
+      diastolicBloodPressure: $diastolicBloodPressure
+      respirationRate: $respirationRate
+      weight: $weight
+    ) {
       _id
-      email
-      firstName
-      lastName
-      type
-    }
-  }
-`;
-
-export const GET_ALL_USERS = gql`
-  query Users {
-    users {
-      _id
-      username
-      email
-      firstName
-      lastName
-      createdAt
+      bodyTemperature
+      heartRate
+      systolicBloodPressure
+      diastolicBloodPressure
+      respirationRate
+      weight
     }
   }
 `;

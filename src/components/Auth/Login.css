@@ -4,12 +4,15 @@
     right: 20px;
     width: 40%;
     height: 90%;
-    background-color: rgba(128, 128, 128, 0.8);
-    border-left: 1px solid #ccc;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
-    border-bottom-left-radius: 10px;
     padding: 20px;
+    display: flex; /* Add this */
+    flex-direction: column; /* Add this */
+    align-items: center; /* Add this */
+    justify-content: center;
 }
 
 .login-input {
@@ -21,23 +24,36 @@
     box-sizing: border-box;
 }
 
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
 .login-button {
-    width: 100%;
+    width: 60%;
     padding: 10px;
-    background-color: #0056b3;
+    background-color: #1f73cc;
     color: #ffffff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    margin-top: 20px;
 }
 
 .login-button:hover {
-    background-color: #004494;
+    background-color: #2661e2;
 }
 
 .error-message {
   color: red;
-  font-size: 0.8em;
+  font-size: 1em;
+  margin-top: 0.25rem;
+}
+
+
+.success-message {
+  color: rgb(16, 71, 221);
+  font-size: 1em;
   margin-top: 0.25rem;
 }

@@ -6,7 +6,9 @@ import { FaWeightScale } from "react-icons/fa6";
 import { TbHeartRateMonitor } from "react-icons/tb";
 import { ReactComponent as RespIcon } from "../../assets/material-symbols-light--respiratory-rate.svg";
 import { ReactComponent as BloodPressureIcon } from "../../assets/blood-pressure-icon.svg";
-import validateStats from "../Validation";
+import { validateStats } from "../Validation";
+import { useMutation, useQuery } from "@apollo/client";
+import { ADD_VITALS_INFORMATION, GET_USER } from "../Utils/graphQLService";
 
 function Stats() {
   const [errors, setErrors] = useState({});
@@ -19,6 +21,17 @@ function Stats() {
     respirationRate: "",
     weight: "",
   });
+
+  const {
+    data: userData,
+    loading: userLoading,
+    error: userError,
+  } = useQuery(GET_USER);
+  const userId = userData?.me?._id;
+  console.log("userId", userId);
+
+  const [addVitalsInformation, { loading, error, data: vitalsData }] =
+    useMutation(ADD_VITALS_INFORMATION);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,55 +53,23 @@ function Stats() {
     const validationErrors = validateStats(formData);
     setErrors(validationErrors);
 
-    if (Object.keys(validationErrors).length === 0) {
-      const graphqlUrl = "http://localhost:4000/graphql/";
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjBiNTFjMDgyMTU4YjQzODgxMTJiZjYiLCJ1c2VyVHlwZSI6InBhdGllbnQiLCJpYXQiOjE3MTIwMTc4NTcsImV4cCI6MTc0MzU3NTQ1N30.-No3JmkOXdbhkbsvOyRg0c_IbVoecKjkRB2stYm9oY4";
-
-      // Construct the mutation query
-      //${formData.bloodPressureSystolic}
-      const mutation = `
-  mutation {
-    addVitalsInformation(
-      bodyTemperature: ${formData.bodyTemperature}
-      heartRate:  ${formData.heartRate}
-      systolicBloodPressure: ${formData.systolicBloodPressure}
-      diastolicBloodPressure: ${formData.diastolicBloodPressure}   
-      respirationRate: ${formData.respirationRate}
-      weight: ${formData.weight}
-    ) {
-      _id
-      bodyTemperature
-      heartRate
-      systolicBloodPressure
-      diastolicBloodPressure
-      respirationRate
-      weight
-    }
-  }
-  
-  `;
-
+    if (Object.keys(validationErrors).length === 0 && userId) {
       try {
         // Send the mutation request
-        const response = await fetch(graphqlUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+        const response = await addVitalsInformation({
+          variables: {
+            _id: userId,
+            bodyTemperature: parseFloat(formData.bodyTemperature),
+            heartRate: parseFloat(formData.heartRate),
+            systolicBloodPressure: parseFloat(formData.systolicBloodPressure),
+            diastolicBloodPressure: parseFloat(formData.diastolicBloodPressure),
+            respirationRate: parseFloat(formData.respirationRate),
+            weight: parseFloat(formData.weight),
           },
-          body: JSON.stringify({ query: mutation }),
         });
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch");
-        }
-
-        // Parse the response JSON
-        const responseData = await response.json();
-
         // Log the response data
-        console.log(responseData);
+        console.log(response.data);
       } catch (error) {
         console.error("Error:", error);
       }
@@ -259,6 +240,9 @@ function Stats() {
           <Button type="submit" className="submit-button">
             Submit
           </Button>
+          {loading && <div>Loading...</div>}
+          {error && <div>Error: {error.message}</div>}
+          {vitalsData && <div>Success! Vitals information added.</div>}
         </Col>
       </Row>
     </Form>

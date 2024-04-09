@@ -1,30 +1,22 @@
 import React from "react";
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { ListGroup, Spinner, Alert, Container } from "react-bootstrap";
+import { GET_ALL_USERS } from "../Utils/graphQLService";
 
-const GET_ALL_USERS = gql`
-  query Users {
-    users {
-      _id
-      username
-      email
-      firstName
-      lastName
-      createdAt
-    }
-  }
-`;
-
-const Users = () => {
+function Users() {
   const { loading, error, data } = useQuery(GET_ALL_USERS);
 
-  if (loading)
+  if (loading) {
     return (
       <Spinner animation="border" role="status">
-        <span className="sr-only">Loading...</span>
+        {/* Use visually hidden component or equivalent for screen reader text */}
+        <span className="visually-hidden">Loading...</span>
       </Spinner>
     );
-  if (error) return <Alert variant="danger">Error! {error.message}</Alert>;
+  }
+  if (error) {
+    return <Alert variant="danger">Error! {error.message}</Alert>;
+  }
 
   return (
     <Container>
@@ -38,6 +30,6 @@ const Users = () => {
       </ListGroup>
     </Container>
   );
-};
+}
 
 export default Users;
