@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 import "./Dashboard.css";
+import { useAuth } from "../Auth/AuthContext";
+//import dotenv from "dotenv";
+//dotenv.config();
+
 
 function Dashboard() {
+
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
 
@@ -12,15 +17,26 @@ function Dashboard() {
     section.classList.toggle('hidden');
   };
 
+  const { userType, userId, firstName } = useAuth();
+
   useEffect(() => {
+
+
+    const token = localStorage.getItem("token");
+      console.log("userType nurse: "+userType);
+      console.log("userId nurse: "+userId);
+      console.log("firstName nurse: "+firstName);  
+      console.log("token nurse: "+token);  
+//"http://localhost:4000/graphql/"
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:4000/graphql/", {
+  //      const response = await fetch(process.env.URLGRAPH, {
+    const response = await fetch("http://localhost:4000/graphql/", {    
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjA4ZWZjMDUwOGViMjliMDQ4ZWY4MWYiLCJ1c2VyVHlwZSI6Im51cnNlIiwiaWF0IjoxNzExODYxOTY0LCJleHAiOjE3NDM0MTk1NjR9.j9wpnJzWWEnJgoYKXrQlQBiwNHIs0mdsnLIxEIYTpRE",
+            `Bearer ${token}`,
           },
           body: JSON.stringify({
             query: `
@@ -49,7 +65,7 @@ function Dashboard() {
     };
 
     fetchData();
-  }, []);
+  }, [userId]);
 
   const handlePatientSelect = (patient) => {
     setSelectedPatient(patient);
@@ -65,10 +81,14 @@ function Dashboard() {
               <th colSpan="2"></th>
             </tr>
           <tbody id="patient-info">
+          <tr>
+              <td>Id:</td>
+              <td>{selectedPatient ? selectedPatient._id: ""}</td>
+            </tr>
             <tr>
               <td>Name:</td>
               <td>{selectedPatient ? selectedPatient.firstName + " " + selectedPatient.lastName : ""}</td>
-            </tr>
+            </tr>            
             <tr>
               <td>Email:</td>
               <td>{selectedPatient ? selectedPatient.email : ""}</td>

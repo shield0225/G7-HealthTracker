@@ -6,6 +6,7 @@ import "./NavBar.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import homepagephoto from "../assets/homepage-photo.jpg";
 
+
 function NavBar({ onLoginClick, onRegisterClick }) {
   const { isLoggedIn, logout, userDetails } = useAuth();
 

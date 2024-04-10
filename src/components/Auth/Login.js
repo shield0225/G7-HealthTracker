@@ -23,6 +23,11 @@ function Login() {
   });
 
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  console.log("userType: "+userType);
+  console.log("userId: "+userId);
+  console.log("firstName: "+firstName);  
+  console.log("token: "+token);  
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -37,7 +42,7 @@ function Login() {
           navigate("/home");
       }
     }
-  }, [isLoggedIn, userType, navigate]);
+  }, [token, isLoggedIn, userType, userId, firstName, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
