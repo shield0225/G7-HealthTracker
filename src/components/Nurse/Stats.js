@@ -7,8 +7,20 @@ import { TbHeartRateMonitor } from "react-icons/tb";
 import { ReactComponent as RespIcon } from "../../assets/material-symbols-light--respiratory-rate.svg";
 import { ReactComponent as BloodPressureIcon } from "../../assets/blood-pressure-icon.svg";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useAuth } from "../Auth/AuthContext";
+//import dotenv from "dotenv";
+//dotenv.config();
 
 function Stats() {
+
+  const { userType, userId, firstName } = useAuth();
+  const token = localStorage.getItem("token");
+    console.log("userType nurse: "+userType);
+    console.log("userId nurse: "+userId);
+    console.log("firstName nurse: "+firstName);  
+    console.log("token nurse: "+token);  
+
+
   const [formData, setFormData] = useState({
     bodyTemperature: "",
     heartRate: "",
@@ -27,16 +39,14 @@ function Stats() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const graphqlUrl = "http://localhost:4000/graphql/";
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjA4ZWZjMDUwOGViMjliMDQ4ZWY4MWYiLCJ1c2VyVHlwZSI6Im51cnNlIiwiaWF0IjoxNzExODYxOTY0LCJleHAiOjE3NDM0MTk1NjR9.j9wpnJzWWEnJgoYKXrQlQBiwNHIs0mdsnLIxEIYTpRE";
-
+    //const graphqlUrl = process.env.URLGRAPH;
+    const graphqlUrl = "http://localhost:4000/graphql/";    
     // Construct the mutation query
     //${formData.bloodPressureSystolic}
     const mutation = `
   mutation {
     addVitalsInformation(
-      _id: "6608efc4508eb29b048ef82a"
+      _id: "66039a85ee742a5dbd18599b"
       bodyTemperature: ${formData.bodyTemperature}
       heartRate:  ${formData.heartRate}
       systolicBloodPressure: ${formData.bloodPressureSystolic}

@@ -7,8 +7,17 @@ import { TbHeartRateMonitor } from "react-icons/tb";
 import { ReactComponent as RespIcon } from "../../assets/material-symbols-light--respiratory-rate.svg";
 import { ReactComponent as BloodPressureIcon } from "../../assets/blood-pressure-icon.svg";
 import validateStats from "../Validation";
+import { useAuth } from "../Auth/AuthContext";
 
 function Stats() {
+
+  const { userType, userId, firstName } = useAuth();
+  const token = localStorage.getItem("token");
+    console.log("userType patient: "+userType);
+    console.log("userId patient: "+userId);
+    console.log("firstName patient: "+firstName);  
+    console.log("token patient: "+token);  
+
   const [errors, setErrors] = useState({});
 
   const [formData, setFormData] = useState({
@@ -42,14 +51,13 @@ function Stats() {
 
     if (Object.keys(validationErrors).length === 0) {
       const graphqlUrl = "http://localhost:4000/graphql/";
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjBiNTFjMDgyMTU4YjQzODgxMTJiZjYiLCJ1c2VyVHlwZSI6InBhdGllbnQiLCJpYXQiOjE3MTIwMTc4NTcsImV4cCI6MTc0MzU3NTQ1N30.-No3JmkOXdbhkbsvOyRg0c_IbVoecKjkRB2stYm9oY4";
 
       // Construct the mutation query
       //${formData.bloodPressureSystolic}
       const mutation = `
   mutation {
     addVitalsInformation(
+      _id: ${userId}
       bodyTemperature: ${formData.bodyTemperature}
       heartRate:  ${formData.heartRate}
       systolicBloodPressure: ${formData.systolicBloodPressure}

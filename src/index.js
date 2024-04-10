@@ -4,11 +4,15 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+//import dotenv from "dotenv";
+//dotenv.config();
 
+const URLGRAPH = process.env.URLGRAPH;
 const token = localStorage.getItem("token");
 
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
+  //uri: URLGRAPH,
   cache: new InMemoryCache(),
   headers: {
     authorization: token ? `Bearer ${token}` : "",

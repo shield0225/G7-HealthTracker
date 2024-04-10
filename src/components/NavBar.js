@@ -6,7 +6,16 @@ import "./NavBar.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import homepagephoto from "../assets/homepage-photo.jpg";
 
+
 function NavBar({ onLoginClick, onRegisterClick }) {
+
+  const { userType, userId, firstName } = useAuth();
+  const token = localStorage.getItem("token");
+    console.log("userType Nav: "+userType);
+    console.log("userId Nav: "+userId);
+    console.log("firstName Nav: "+firstName);  
+    console.log("token Nav: "+token);  
+
   const [servicesExpanded, setServicesExpanded] = useState(false);
 
   const toggleServices = () => {
@@ -56,7 +65,7 @@ function NavBar({ onLoginClick, onRegisterClick }) {
           {isLoggedIn ? (
             <Nav.Item>
               <Nav.Link as={Link} to="/profile" eventKey="profile">
-                <strong>Hello User</strong>
+                <strong>Hello {firstName}</strong>
               </Nav.Link>
             </Nav.Item>
           ) : (

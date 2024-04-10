@@ -27,7 +27,7 @@ function Register({}) {
   };
 
   const [formData, setFormData] = useState(initialState);
-  const { login, isLoggedIn, userType } = useAuth();
+  const { login, isLoggedIn, userType, userId, firstName } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,7 +43,7 @@ function Register({}) {
           navigate("/profile");
       }
     }
-  }, [isLoggedIn, userType, navigate]);
+  }, [isLoggedIn, userType, userId, firstName, navigate]);
 
   const [signup, { data, loading, error }] = useMutation(SIGNUP_MUTATION, {
     onCompleted: (data) => {
