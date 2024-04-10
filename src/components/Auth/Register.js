@@ -5,6 +5,15 @@ import "./Login.css";
 import { Form, Button } from "react-bootstrap";
 import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
+import Alert from '@mui/material/Alert';
+
+function getErrorMessageOrElse(error, orElse) {
+  if (error && error.message) {
+    return error.message;
+  }
+
+  return orElse;
+}
 
 function Register({}) {
   // Initial state for resetting the form
@@ -42,8 +51,7 @@ function Register({}) {
       console.log("token", data.signup.token);
       // Reset the form data to the initial state
       setFormData(initialState);
-      
-    },
+    }
   });
 
   const handleChange = (e) => {
@@ -149,7 +157,7 @@ function Register({}) {
           <Button type="submit" disabled={loading}>
             {loading ? "Signing up..." : "Sign Up"}
           </Button>
-          {error && <div className="error-message">Error: {error.message}</div>}
+          {error && <Alert severity="error" className="mt-2">{getErrorMessageOrElse(error, "Couldn't register user")}</Alert>}
         </Form>
       </div>
     </div>
