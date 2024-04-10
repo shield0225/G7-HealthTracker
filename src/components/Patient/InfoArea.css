@@ -209,7 +209,7 @@
   border: 1px solid #ccc;
   padding: 15px;
   text-align: center;
-  background-color: #a19e9e;
+  background-color: #bdbaba;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 18px;
@@ -232,7 +232,8 @@
   text-align: center;
 }
 
-input[type="checkbox"] {
-  color: #fff;
-  cursor: pointer;
+
+.selected {
+  background-color: #027b8e; 
+  color: #ffffff; 
 }

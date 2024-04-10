@@ -57,6 +57,7 @@ export const LOGIN_MUTATION = gql`
 
 export const ADD_VITALS_INFORMATION = gql`
   mutation AddVitalsInformation(
+    $_id: String!
     $bodyTemperature: Float!
     $heartRate: Float!
     $systolicBloodPressure: Float!
@@ -65,6 +66,7 @@ export const ADD_VITALS_INFORMATION = gql`
     $weight: Float!
   ) {
     addVitalsInformation(
+      _id: $_id
       bodyTemperature: $bodyTemperature
       heartRate: $heartRate
       systolicBloodPressure: $systolicBloodPressure

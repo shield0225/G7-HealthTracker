@@ -18,24 +18,29 @@ function Symptoms() {
     "Diarrhea",
   ];
 
+  const [error, setError] = useState(null);
+  const [data, setData] = useState(null);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     if (newSymptom.trim() !== "" && !symptomsList.includes(newSymptom)) {
       setSymptomsList([...symptomsList, newSymptom]);
       setNewSymptom("");
+      setData(true);
+      console.log("Symptom/s added successfully!");
+    } else {
+      setError("Failed to add symptoms. Please try again.");
+      console.log("Failed to add symptoms. Please try again.");
     }
   };
 
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
 
-  const handleCheckboxChange = (event) => {
-    const { value, checked } = event.target;
-    if (checked) {
-      setSelectedSymptoms([...selectedSymptoms, value]);
+  const handleSymptomClick = (symptom) => {
+    if (selectedSymptoms.includes(symptom)) {
+      setSelectedSymptoms(selectedSymptoms.filter((s) => s !== symptom));
     } else {
-      setSelectedSymptoms(
-        selectedSymptoms.filter((symptom) => symptom !== value)
-      );
+      setSelectedSymptoms([...selectedSymptoms, symptom]);
     }
   };
 
@@ -46,20 +51,19 @@ function Symptoms() {
           <Form onSubmit={handleSubmit}>
             <Row className="symptoms-grid">
               {symptoms.map((symptom) => (
-                <Col md={4} key={symptom} className="symptom-card">
-                  {" "}
-                  <Form.Check type="checkbox">
-                    <Form.Check.Input
-                      type="checkbox"
-                      value={symptom}
-                      checked={selectedSymptoms.includes(symptom)}
-                      onChange={handleCheckboxChange}
-                      id={`checkbox-${symptom}`}
-                    />
-                    <Form.Check.Label htmlFor={`checkbox-${symptom}`}>
-                      {symptom}
-                    </Form.Check.Label>
-                  </Form.Check>
+                <Col
+                  md={4}
+                  key={symptom}
+                  className={`symptom-card ${
+                    selectedSymptoms.includes(symptom) ? "selected" : ""
+                  }`}
+                >
+                  <div
+                    className="card-content"
+                    onClick={() => handleSymptomClick(symptom)}
+                  >
+                    {symptom}
+                  </div>
                 </Col>
               ))}
             </Row>
@@ -72,12 +76,15 @@ function Symptoms() {
                 Submit Selections
               </Button>
             </div>
-            {/* {data && ( */}
-            <div className="button-container success-message">
-              Submitted successfully! Please wait for your nurse's
-              recommendations.
-            </div>
-            {/* )} */}
+            {data && (
+              <div className="button-container success-message">
+                Submitted successfully! Please wait for your nurse's
+                recommendations.
+              </div>
+            )}
+            {error && (
+              <div className="button-container error-message">{error}</div>
+            )}
           </Form>
         </div>
       </div>

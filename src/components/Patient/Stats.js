@@ -13,15 +13,6 @@ import { ADD_VITALS_INFORMATION, GET_USER } from "../Utils/graphQLService";
 function Stats() {
   const [errors, setErrors] = useState({});
 
-  const [formData, setFormData] = useState({
-    bodyTemperature: "",
-    heartRate: "",
-    systolicBloodPressure: "",
-    diastolicBloodPressure: "",
-    respirationRate: "",
-    weight: "",
-  });
-
   const {
     data: userData,
     loading: userLoading,
@@ -29,6 +20,16 @@ function Stats() {
   } = useQuery(GET_USER);
   const userId = userData?.me?._id;
   console.log("userId", userId);
+
+  const [formData, setFormData] = useState({
+    _id: userId,
+    bodyTemperature: "",
+    heartRate: "",
+    systolicBloodPressure: "",
+    diastolicBloodPressure: "",
+    respirationRate: "",
+    weight: "",
+  });
 
   const [addVitalsInformation, { loading, error, data: vitalsData }] =
     useMutation(ADD_VITALS_INFORMATION);
