@@ -5,9 +5,14 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+const token = localStorage.getItem("token");
+
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
   cache: new InMemoryCache(),
+  headers: {
+    authorization: token ? `Bearer ${token}` : "",
+  },
 });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

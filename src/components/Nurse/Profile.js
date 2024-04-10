@@ -6,7 +6,7 @@ function Profile({ activeComponent }) {
       <div className="profile-header">
         {" "}
         <img
-          src="https://d29fhpw069ctt2.cloudfront.net/clipart/99148/preview/patient_preview_804a.png"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtqM0CvKDZXfAQiR0hyaAXlAXXSOg_t2nzlg&s"
           alt="Profile"
           className="profile-image"
         />
