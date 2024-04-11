@@ -9,9 +9,9 @@ import homepagephoto from "../assets/homepage-photo.jpg";
 function NavBar({ onLoginClick, onRegisterClick }) {
   const [servicesExpanded, setServicesExpanded] = useState(false);
 
-  const toggleServices = () => {
-    setServicesExpanded(!servicesExpanded);
-  };
+  // const toggleServices = () => {
+  //   setServicesExpanded(!servicesExpanded);
+  // };
 
   const { isLoggedIn, logout } = useAuth();
 
@@ -36,11 +36,11 @@ function NavBar({ onLoginClick, onRegisterClick }) {
           <Nav.Item>
             <Nav.Link
               as={Link}
-              to="/services"
-              eventkey="services"
-              onClick={toggleServices}
+              to="/game"
+              eventkey="game "
+              // onClick={toggleServices}
             >
-              Services
+              Games
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
