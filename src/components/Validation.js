@@ -23,11 +23,18 @@ export const validateStats = (formData) => {
     delete newErrors.weight;
   }
 
-  if (!formData.systolicBloodPressure) {
-    newErrors.systolicBloodPressure = "Systolic blood pressure is required.";
-  } else if (Number(formData.systolicBloodPressure) <= 0) {
+  if (
+    Number(formData.systolicBloodPressure) < 50 ||
+    Number(formData.systolicBloodPressure) > 250
+  ) {
     newErrors.systolicBloodPressure =
-      "Systolic blood pressure must be greater than 0.";
+      "Systolic blood pressure must be between 50 and 250.";
+  } else if (
+    Number(formData.systolicBloodPressure) <=
+    Number(formData.diastolicBloodPressure)
+  ) {
+    newErrors.systolicBloodPressure =
+      "Systolic pressure must be greater than diastolic pressure.";
   } else {
     delete newErrors.systolicBloodPressure;
   }
@@ -37,6 +44,12 @@ export const validateStats = (formData) => {
   } else if (Number(formData.diastolicBloodPressure) <= 0) {
     newErrors.diastolicBloodPressure =
       "Diastolic blood pressure must be greater than 0.";
+  } else if (
+    Number(formData.diastolicBloodPressure) < 50 ||
+    Number(formData.diastolicBloodPressure) > 250
+  ) {
+    newErrors.diastolicBloodPressure =
+      "Diastolic blood pressure must be between 50 and 250.";
   } else {
     delete newErrors.diastolicBloodPressure;
   }
@@ -45,8 +58,10 @@ export const validateStats = (formData) => {
     Number(formData.systolicBloodPressure) <=
     Number(formData.diastolicBloodPressure)
   ) {
-    newErrors.bloodPressure =
+    newErrors.systolicBloodPressure =
       "Systolic pressure must be greater than diastolic pressure.";
+  } else {
+    delete newErrors.systolicBloodPressure;
   }
 
   if (

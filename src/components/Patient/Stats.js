@@ -8,18 +8,12 @@ import { ReactComponent as RespIcon } from "../../assets/material-symbols-light-
 import { ReactComponent as BloodPressureIcon } from "../../assets/blood-pressure-icon.svg";
 import { validateStats } from "../Validation";
 import { useMutation, useQuery } from "@apollo/client";
-import { ADD_VITALS_INFORMATION, GET_USER } from "../Utils/graphQLService";
+import { ADD_VITALS_INFORMATION, GET_USER } from "../../Utils/graphQLService";
 
 function Stats() {
   const [errors, setErrors] = useState({});
-
-  const {
-    data: userData,
-    loading: userLoading,
-    error: userError,
-  } = useQuery(GET_USER);
+  const { data: userData } = useQuery(GET_USER);
   const userId = userData?.me?._id;
-  console.log("userId", userId);
 
   const [formData, setFormData] = useState({
     _id: userId,
@@ -235,16 +229,21 @@ function Stats() {
           </Col>
         </Col>
       </Row>
-
-      <Row className="form-field  align-items-center">
-        <Col className="text-center">
+      <Row className="form-field align-items-center">
+        <div className="button-container">
           <Button type="submit" className="submit-button">
             Submit
           </Button>
-          {loading && <div>Loading...</div>}
-          {error && <div>Error: {error.message}</div>}
-          {vitalsData && <div>Success! Vitals information added.</div>}
-        </Col>
+        </div>{" "}
+        <div className="button-container">
+          {loading && <div className="success-message">Loading...</div>}
+          {error && <div className="error-message">Error: {error.message}</div>}
+          {vitalsData && (
+            <div className="success-message">
+              Success! Vitals information added.
+            </div>
+          )}
+        </div>
       </Row>
     </Form>
   );

@@ -1,11 +1,11 @@
 .sidebar {
     width: 20%;
-    height: 125vh;
-    background-color: #f9f9f9;
+    /* height: 125vh; */
+    background-color: #ffffff !important;
     display: flex;
     flex-direction: column;
-    padding: 30px 10px;
-    border: 1px solid #dcdcdc;
+    padding: 30px 20px;
+    border: 1px solid #ffffff;
 }
 
 @media (max-width: 768px) {
@@ -43,6 +43,7 @@
     margin-bottom: 5px;
     border-radius: 4px;
     align-items: center; 
+    background-color: #ffffff;
 }
 
 .side-item:hover,

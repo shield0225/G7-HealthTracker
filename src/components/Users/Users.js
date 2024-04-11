@@ -1,7 +1,7 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
 import { ListGroup, Spinner, Alert, Container } from "react-bootstrap";
-import { GET_ALL_USERS } from "../Utils/graphQLService";
+import { GET_ALL_USERS } from "../../Utils/graphQLService";
 
 function Users() {
   const { loading, error, data } = useQuery(GET_ALL_USERS);

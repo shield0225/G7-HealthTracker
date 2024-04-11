@@ -1,24 +1,43 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { jwtDecode } from "jwt-decode";
-import client from "../Utils/apolloClient";
-import { LOGIN_MUTATION, GET_USER } from "../Utils/graphQLService";
+import client from "../../Utils/apolloClient";
+import { LOGIN_MUTATION, GET_USER } from "../../Utils/graphQLService";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
+console.log(client);
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const [userType, setUserType] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
 
+  const navigate = useNavigate();
+
+  const logout = useCallback(() => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    setUserType(null);
+    setUserDetails(null);
+    navigate("/login");
+    console.log("Logged out.");
+  }, [navigate]);
+
   const fetchUserDetails = async () => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decoded = jwtDecode(token);
         const { data } = await client.query({
           query: GET_USER,
         });
         setUserDetails(data.me);
+        console.log("User details fetched: ", data.me);
       } catch (error) {
         console.error("Error fetching user details: ", error);
       }
@@ -38,7 +57,7 @@ export const AuthProvider = ({ children }) => {
         logout();
       }
     }
-  }, []);
+  }, [logout]);
 
   const login = async (formData) => {
     try {
@@ -61,13 +80,6 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Login error:", error);
     }
-  };
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-    setUserType(null);
-    setUserDetails(null);
   };
 
   return (

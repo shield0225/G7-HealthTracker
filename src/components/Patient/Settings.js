@@ -1,7 +1,7 @@
 import React from "react";
 import "./InfoArea.css";
 
-function Personal() {
+function Settings() {
   return (
     <>
       <h1>Patient</h1>
@@ -9,4 +9,4 @@ function Personal() {
   );
 }
 
-export default Personal;
+export default Settings;

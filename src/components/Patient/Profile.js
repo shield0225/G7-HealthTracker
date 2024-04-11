@@ -1,5 +1,6 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
+import "./InfoArea.css";
 
 function Profile({ activeComponent }) {
   return (
@@ -7,7 +8,6 @@ function Profile({ activeComponent }) {
       <Row>
         <Col>
           <div className="profile-header">
-            {" "}
             <img
               src="https://image.kpopmap.com/2019/03/jisoo_profile_s_0215.jpg"
               alt="Profile"
@@ -17,10 +17,12 @@ function Profile({ activeComponent }) {
           </div>
         </Col>
         <Col>
-          <div className="profile-info">
-            <h2>Jisoo</h2>
+          {/* <div className="profile-info">
+            <h2 className="title">
+              '${userDetails?.firstName}'+ ' {userDetails?.lastName}'
+            </h2>
             <p>Age: 26</p>
-          </div>
+          </div> */}
         </Col>
       </Row>
     </div>

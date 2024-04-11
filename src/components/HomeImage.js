@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "react-bootstrap/Image";
-import homepagephoto from "../assets/homepage-photo.jpg";
 import "../App.css";
 
 function HomeImage() {

@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { SIGNUP_MUTATION } from "../Utils/graphQLService";
+import { SIGNUP_MUTATION } from "../../Utils/graphQLService";
 import "./Login.css";
 import { Form, Button } from "react-bootstrap";
-import { useAuth } from "./AuthContext";
-import { useNavigate } from "react-router-dom";
 import { Row, Col } from "react-bootstrap";
 import { validateRegistration } from "../Validation";
 
-function Register({}) {
+function Register() {
   const [errors, setErrors] = useState({});
 
   const initialState = {
@@ -21,8 +19,6 @@ function Register({}) {
   };
 
   const [formData, setFormData] = useState(initialState);
-  const { login, isLoggedIn, userType } = useAuth();
-  const navigate = useNavigate();
 
   const [signup, { loading, error, data }] = useMutation(SIGNUP_MUTATION);
   const handleChange = (e) => {
@@ -58,16 +54,10 @@ function Register({}) {
             error.graphQLErrors?.[0]?.message ||
             "An unexpected error occurred.";
           console.log("Signup unsuccessful", error);
-          // Set error state to display error message
           setErrors({ ...errors, signup: message });
         });
     }
   };
-
-  if (data) {
-    console.log("Signup successful", data);
-    console.log("token", data.signup.token);
-  }
 
   return (
     <div className="login-container">
@@ -162,12 +152,12 @@ function Register({}) {
               onChange={handleChange}
             />
           </Form.Group>
-          <div class="button-container">
+          <div className="button-container">
             <Button type="submit" className="login-button" disabled={loading}>
               {loading ? "Signing up..." : "Sign Up"}
             </Button>{" "}
           </div>
-          <div class="button-container">
+          <div className="button-container">
             {data && (
               <div className="success-message">
                 Signup successful! Please <strong>login</strong>.

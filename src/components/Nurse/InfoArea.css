@@ -19,9 +19,10 @@
   .profile-header {
     flex-direction: row;
     align-items: center;
-    justify-content: start;
+    justify-content: flex-start;
     gap: 20px;
   }
+
 
   .icon {
   padding: 5px;
@@ -77,8 +78,8 @@
 
 .profile-header {
   display: flex;
-  align-items: center; 
-  justify-content: start;
+  align-items: flex-end; 
+  justify-content: flex-start;
   gap: 20px;
   flex-wrap: nowrap;
 }

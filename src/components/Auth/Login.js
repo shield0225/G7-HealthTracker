@@ -4,6 +4,15 @@ import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import { validateLogin } from "../Validation";
+import Alert from "@mui/material/Alert";
+
+function getErrorMessageOrElse(error, orElse) {
+  if (error && error.message) {
+    return error.message;
+  }
+
+  return orElse;
+}
 
 function Login() {
   const [errors, setErrors] = useState({});
@@ -24,14 +33,14 @@ function Login() {
           navigate("/patient");
           break;
         default:
-          navigate("/profile");
+          navigate("/home");
       }
     }
   }, [isLoggedIn, userType, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = await validateLogin(formData);
+    const validationErrors = validateLogin(formData);
     setErrors(validationErrors);
     console.log(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
@@ -92,7 +101,9 @@ function Login() {
               {loading ? "Logging in..." : "Log In"}
             </Button>
             {error && (
-              <div className="error-message">Error: {error.message}</div>
+              <Alert severity="error" className="mt-2">
+                {getErrorMessageOrElse(error, "Couldn't login user")}
+              </Alert>
             )}
           </div>
         </Form>

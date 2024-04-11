@@ -1,20 +1,20 @@
 import React from "react";
 import "./SideBar.css";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Auth/AuthContext";
 import { Col } from "react-bootstrap";
 import { VscDashboard } from "react-icons/vsc";
 import { FcStatistics } from "react-icons/fc";
 import { IoMdNotifications } from "react-icons/io";
-import { MdOutlineRoomPreferences } from "react-icons/md";
 import { IoPerson } from "react-icons/io5";
-import { CiSquareQuestion } from "react-icons/ci";
 import { RiBodyScanLine } from "react-icons/ri";
 import { FaSignOutAlt } from "react-icons/fa";
 
 function SideBar({ activeComponent, setActiveComponent }) {
-  const navigate = useNavigate();
-  const { isLoggedIn, logout } = useAuth();
+  const { logout } = useAuth();
+
+  const getActiveClass = (componentName) => {
+    return activeComponent === componentName ? "active" : "";
+  };
 
   return (
     <div className="sidebar">
@@ -23,7 +23,7 @@ function SideBar({ activeComponent, setActiveComponent }) {
         <a
           href
           onClick={() => setActiveComponent("Dashboard")}
-          className={"side-item ${getActiveClass('Dashboard')}"}
+          className={`side-item ${getActiveClass("Dashboard")}`}
         >
           <Col s={1}>
             <VscDashboard className="side-icon" />
@@ -35,7 +35,7 @@ function SideBar({ activeComponent, setActiveComponent }) {
         <a
           href
           onClick={() => setActiveComponent("Stats")}
-          className={"side-item ${getActiveClass('Stats')}"}
+          className={`side-item ${getActiveClass("Stats")}`}
         >
           <Col s={1}>
             <FcStatistics className="side-icon" />
@@ -47,7 +47,7 @@ function SideBar({ activeComponent, setActiveComponent }) {
         <a
           href
           onClick={() => setActiveComponent("Symptoms")}
-          className={"side-item ${getActiveClass('Symptoms')}"}
+          className={`side-item ${getActiveClass("Symptoms")}`}
         >
           <Col s={1}>
             <RiBodyScanLine className="side-icon" />
@@ -59,7 +59,7 @@ function SideBar({ activeComponent, setActiveComponent }) {
         <a
           href
           onClick={() => setActiveComponent("Notifications")}
-          className={"side-item ${getActiveClass('Notifications')}"}
+          className={`side-item ${getActiveClass("Notifications")}`}
         >
           <Col s={1}>
             <IoMdNotifications className="side-icon" />
@@ -70,32 +70,8 @@ function SideBar({ activeComponent, setActiveComponent }) {
         </a>
         <a
           href
-          onClick={() => setActiveComponent("Requests")}
-          className={"side-item ${getActiveClass('Requests')}"}
-        >
-          <Col s={1}>
-            <CiSquareQuestion className="side-icon" />
-          </Col>
-          <Col xs={11}>
-            <span className="label">Requests</span>
-          </Col>
-        </a>
-        <a
-          href
-          onClick={() => setActiveComponent("Preferences")}
-          className={"side-item ${getActiveClass('Preferences')}"}
-        >
-          <Col s={1}>
-            <MdOutlineRoomPreferences className="side-icon" />
-          </Col>
-          <Col xs={11}>
-            <span className="label">Preferences</span>
-          </Col>
-        </a>
-        <a
-          href
           onClick={() => setActiveComponent("PersonalInfo")}
-          className={"side-item ${getActiveClass('PersonalInfo')}"}
+          className={`side-item ${getActiveClass("PersonalInfo")}`}
         >
           <Col s={1}>
             <IoPerson className="side-icon" />
