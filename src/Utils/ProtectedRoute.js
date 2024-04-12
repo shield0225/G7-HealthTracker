@@ -1,4 +1,4 @@
-import { useAuth } from "../Auth/AuthContext";
+import { useAuth } from "../components/Auth/AuthContext";
 import Unauthorized from "./Unauthorized";
 
 const ProtectedRoute = ({ children, allowedRoles }) => {

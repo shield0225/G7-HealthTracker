@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Nav, Navbar, Button } from "react-bootstrap";
+import React from "react";
+import { Nav, Navbar, Button, Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useAuth } from "./Auth/AuthContext";
 import "./NavBar.css";
@@ -7,13 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import homepagephoto from "../assets/homepage-photo.jpg";
 
 function NavBar({ onLoginClick, onRegisterClick }) {
-  const [servicesExpanded, setServicesExpanded] = useState(false);
-
-  const toggleServices = () => {
-    setServicesExpanded(!servicesExpanded);
-  };
-
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout, userDetails } = useAuth();
 
   return (
     <Navbar
@@ -26,45 +20,60 @@ function NavBar({ onLoginClick, onRegisterClick }) {
         <img src={homepagephoto} width={50} alt="logo" /> <b>Health Tracker</b>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav lg="2" className="ms-auto text-small" activeKey="home">
-          <Nav.Item>
-            <Nav.Link as={Link} to="/home" eventkey="home">
-              Home
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link
-              as={Link}
-              to="/services"
-              eventkey="services"
-              onClick={toggleServices}
-            >
-              Services
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link as={Link} to="/about" eventkey="about">
-              About
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link as={Link} to="/contactus" eventkey="contactus">
-              Contact Us
-            </Nav.Link>
-          </Nav.Item>
-          {isLoggedIn ? (
-            <Nav.Item>
-              <Nav.Link as={Link} to="/profile" eventKey="profile">
-                <strong>Hello User</strong>
-              </Nav.Link>
-            </Nav.Item>
-          ) : (
+      <Navbar.Collapse className="flex-column">
+        <Nav className="ms-auto text-small" activeKey="home">
+          {isLoggedIn && (
+            <>
+              <Nav.Item>
+                <Nav.Link as={Link} to="/home" eventkey="home">
+                  Home
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link
+                  as={Link}
+                  to={userDetails?.userType === "nurse" ? "/nurse" : "/patient"}
+                  eventkey="profile"
+                >
+                  Dashboard
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link as={Link} to="/game" eventkey="game">
+                  Games
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link as={Link} to="/teampage" eventkey="teampage">
+                  Team Page
+                </Nav.Link>
+              </Nav.Item>
+
+              {/* User-specific dropdown */}
+              <Dropdown as={Nav.Item} align="end" className="nav-item">
+                <Dropdown.Toggle as={Nav.Link}>
+                  Welcome,
+                  <strong>{`${userDetails?.firstName} ${userDetails?.lastName}`}</strong>
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item
+                    eventKey="logout"
+                    onClick={logout}
+                    className="nav-item"
+                    align="end"
+                  >
+                    Log out
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </>
+          )}
+
+          {/* Buttons for non-logged-in users */}
+          {!isLoggedIn && (
             <>
               <Button
-                onClick={() => {
-                  onRegisterClick();
-                }}
+                onClick={onRegisterClick}
                 variant="outline-secondary"
                 className="ms-2 text-small button-custom-padding button-text-size"
                 eventkey="register"
@@ -72,9 +81,7 @@ function NavBar({ onLoginClick, onRegisterClick }) {
                 Sign Up
               </Button>
               <Button
-                onClick={() => {
-                  onLoginClick();
-                }}
+                onClick={onLoginClick}
                 variant="outline-secondary"
                 className="ms-2 text-small button-custom-padding button-text-size"
                 eventkey="login"

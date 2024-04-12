@@ -1,3 +1,4 @@
+import "../App.css";
 import React, { useState } from "react";
 import { Container } from "react-bootstrap";
 import Footer from "./Footer";
@@ -6,7 +7,6 @@ import HomeImage from "./HomeImage";
 import Features from "./Features";
 import Login from "./Auth/Login";
 import Register from "./Auth/Register";
-import "../App.css";
 
 function Home(props) {
   const [showLogin, setShowLogin] = useState(false);

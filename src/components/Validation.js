@@ -1,4 +1,4 @@
-const validateStats = (formData) => {
+export const validateStats = (formData) => {
   let newErrors = {};
 
   if (
@@ -23,11 +23,18 @@ const validateStats = (formData) => {
     delete newErrors.weight;
   }
 
-  if (!formData.systolicBloodPressure) {
-    newErrors.systolicBloodPressure = "Systolic blood pressure is required.";
-  } else if (Number(formData.systolicBloodPressure) <= 0) {
+  if (
+    Number(formData.systolicBloodPressure) < 50 ||
+    Number(formData.systolicBloodPressure) > 250
+  ) {
     newErrors.systolicBloodPressure =
-      "Systolic blood pressure must be greater than 0.";
+      "Systolic blood pressure must be between 50 and 250.";
+  } else if (
+    Number(formData.systolicBloodPressure) <=
+    Number(formData.diastolicBloodPressure)
+  ) {
+    newErrors.systolicBloodPressure =
+      "Systolic pressure must be greater than diastolic pressure.";
   } else {
     delete newErrors.systolicBloodPressure;
   }
@@ -37,6 +44,12 @@ const validateStats = (formData) => {
   } else if (Number(formData.diastolicBloodPressure) <= 0) {
     newErrors.diastolicBloodPressure =
       "Diastolic blood pressure must be greater than 0.";
+  } else if (
+    Number(formData.diastolicBloodPressure) < 50 ||
+    Number(formData.diastolicBloodPressure) > 250
+  ) {
+    newErrors.diastolicBloodPressure =
+      "Diastolic blood pressure must be between 50 and 250.";
   } else {
     delete newErrors.diastolicBloodPressure;
   }
@@ -45,8 +58,10 @@ const validateStats = (formData) => {
     Number(formData.systolicBloodPressure) <=
     Number(formData.diastolicBloodPressure)
   ) {
-    newErrors.bloodPressure =
+    newErrors.systolicBloodPressure =
       "Systolic pressure must be greater than diastolic pressure.";
+  } else {
+    delete newErrors.systolicBloodPressure;
   }
 
   if (
@@ -61,4 +76,53 @@ const validateStats = (formData) => {
   return newErrors;
 };
 
-export default validateStats;
+export const validateRegistration = (formData) => {
+  let newErrors = {};
+
+  // Check if email is already in the system
+  if (isEmailAlreadyRegistered(formData.email)) {
+    newErrors.email = "Email address is already registered.";
+  } else {
+    delete newErrors.email;
+  }
+
+  // Check password length
+  if (formData.password.length < 6) {
+    newErrors.password = "Must be at least 6 characters.";
+  } else {
+    delete newErrors.password;
+  }
+
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(formData.email)) {
+    newErrors.email = "Invalid email address.";
+  } else {
+    delete newErrors.email;
+  }
+
+  return newErrors;
+};
+
+const isEmailAlreadyRegistered = (email) => {
+  // TBD
+};
+
+export const validateLogin = (formData) => {
+  let newErrors = {};
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(formData.email)) {
+    newErrors.email = "Invalid email address.";
+  } else {
+    delete newErrors.email;
+  }
+
+  if (formData.password.length < 6) {
+    newErrors.password = "Must be at least 6 characters";
+  } else {
+    delete newErrors.password;
+  }
+
+  return newErrors;
+};

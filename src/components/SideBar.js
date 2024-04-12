@@ -7,21 +7,21 @@ import { IoMdNotifications } from "react-icons/io";
 import { IoPerson } from "react-icons/io5";
 import { RiBodyScanLine } from "react-icons/ri";
 import { FaSignOutAlt } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../Auth/AuthContext";
+import { useAuth } from "./Auth/AuthContext";
 
 function SideBar({ activeComponent, setActiveComponent }) {
-  const navigate = useNavigate();
-  const { isLoggedIn, logout } = useAuth();
+  const { logout } = useAuth();
+
+  const getActiveClass = (componentName) =>
+    activeComponent === componentName ? "active" : "";
 
   return (
     <div className="sidebar">
       <div className="sidebar-logo">{/* logo here */}</div>
       <nav className="sidebar-nav">
-        <a
-          href
+        <button
+          className={`side-item ${getActiveClass("Dashboard")}`}
           onClick={() => setActiveComponent("Dashboard")}
-          className={"side-item ${getActiveClass('Dashboard')}"}
         >
           <Col s={1}>
             <VscDashboard className="side-icon" />
@@ -29,11 +29,10 @@ function SideBar({ activeComponent, setActiveComponent }) {
           <Col xs={11}>
             <span className="label">Dashboard</span>
           </Col>
-        </a>
-        <a
-          href
+        </button>
+        <button
+          className={`side-item ${getActiveClass("Stats")}`}
           onClick={() => setActiveComponent("Stats")}
-          className={"side-item ${getActiveClass('Stats')}"}
         >
           <Col s={1}>
             <FcStatistics className="side-icon" />
@@ -41,11 +40,10 @@ function SideBar({ activeComponent, setActiveComponent }) {
           <Col xs={11}>
             <span className="label">Daily Stats</span>
           </Col>
-        </a>
-        <a
-          href
+        </button>
+        <button
+          className={`side-item ${getActiveClass("Symptoms")}`}
           onClick={() => setActiveComponent("Symptoms")}
-          className={"side-item ${getActiveClass('Symptoms')}"}
         >
           <Col s={1}>
             <RiBodyScanLine className="side-icon" />
@@ -53,11 +51,10 @@ function SideBar({ activeComponent, setActiveComponent }) {
           <Col xs={11}>
             <span className="label">Symptoms</span>
           </Col>
-        </a>
-        <a
-          href
+        </button>
+        <button
+          className={`side-item ${getActiveClass("Notifications")}`}
           onClick={() => setActiveComponent("Notifications")}
-          className={"side-item ${getActiveClass('Notifications')}"}
         >
           <Col s={1}>
             <IoMdNotifications className="side-icon" />
@@ -65,29 +62,27 @@ function SideBar({ activeComponent, setActiveComponent }) {
           <Col xs={11}>
             <span className="label">Notifications</span>
           </Col>
-        </a>
-        <a
-          href
+        </button>
+        <button
+          className={`side-item ${getActiveClass("PersonalInfo")}`}
           onClick={() => setActiveComponent("PersonalInfo")}
-          className={"side-item ${getActiveClass('PersonalInfo')}"}
         >
           <Col s={1}>
             <IoPerson className="side-icon" />
           </Col>
           <Col xs={11}>
-            <span className="label">Personal Info</span>
+            <span className="label">Personal</span>
           </Col>
-        </a>
-
+        </button>
         <div className="sidebar-footer">
-          <a href="/home" className="side-item" onClick={logout}>
+          <button className="side-item" onClick={logout}>
             <Col s={1}>
               <FaSignOutAlt className="side-icon" />
             </Col>
             <Col xs={11}>
               <span className="label">Log out</span>
             </Col>
-          </a>
+          </button>
         </div>
       </nav>
     </div>

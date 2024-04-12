@@ -3,13 +3,25 @@ import "./Login.css";
 import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import { validateLogin } from "../Validation";
+import Alert from "@mui/material/Alert";
+
+function getErrorMessageOrElse(error, orElse) {
+  if (error && error.message) {
+    return error.message;
+  }
+
+  return orElse;
+}
 
 function Login() {
+  const { login, isLoggedIn, userType, loading, error } = useAuth();
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const { login, isLoggedIn, userType, loading, error } = useAuth();
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,14 +34,19 @@ function Login() {
           navigate("/patient");
           break;
         default:
-          navigate("/profile");
+          navigate("/home");
       }
     }
   }, [isLoggedIn, userType, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(formData);
+    const validationErrors = validateLogin(formData);
+    setErrors(validationErrors);
+    console.log(validationErrors);
+    if (Object.keys(validationErrors).length === 0) {
+      await login(formData);
+    }
   };
 
   const handleChange = (e) => {
@@ -38,12 +55,18 @@ function Login() {
       ...prevState,
       [name]: value,
     }));
+    if (errors[name]) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: undefined,
+      }));
+    }
   };
 
   return (
     <div className="login-container">
       <div className="login-form">
-        <h1>Login</h1>
+        <h1>Welcome Back!</h1>
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="formEmail">
             <Form.Label>Email</Form.Label>
@@ -55,6 +78,9 @@ function Login() {
               onChange={handleChange}
               required
             />
+            {errors.email && (
+              <div className="error-message">{errors.email}</div>
+            )}
           </Form.Group>
 
           <Form.Group controlId="formPassword">
@@ -67,12 +93,20 @@ function Login() {
               onChange={handleChange}
               required
             />
+            {errors.password && (
+              <div className="error-message">{errors.password}</div>
+            )}
           </Form.Group>
-
-          <Button type="submit" disabled={loading}>
-            {loading ? "Logging in..." : "Log In"}
-          </Button>
-          {error && <p>Error: {error.message}</p>}
+          <div className="button-container">
+            <Button type="submit" className="login-button" disabled={loading}>
+              {loading ? "Logging in..." : "Log In"}
+            </Button>
+            {error && (
+              <Alert severity="error" className="mt-2">
+                {getErrorMessageOrElse(error, "Couldn't login user")}
+              </Alert>
+            )}
+          </div>
         </Form>
       </div>
     </div>
