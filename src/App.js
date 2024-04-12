@@ -10,49 +10,43 @@ import Settings from "./components/Patient/Settings";
 import Stats from "./components/Patient/Stats";
 import Users from "./components/Users/Users";
 import TeamPage from "./components/TeamPage";
-import {
-  BrowserRouter,
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Container } from "react-bootstrap";
 
 function App() {
   return (
     <Container>
-      <BrowserRouter>
+      {" "}
+      <Router>
         <ApolloProvider client={client}>
           <AuthProvider>
-            <Router>
-              <Routes>
-                <Route index element={<Home />} />
-                <Route path="home" element={<Home />} />
-                <Route path="settings" element={<Settings />} />
-                <Route path="stats" element={<Stats />} />
-                <Route path="users" element={<Users />} />
-                <Route path="teampage" element={<TeamPage />} />
-                <Route
-                  path="patient"
-                  element={
-                    <ProtectedRoute allowedRoles={["patient"]}>
-                      <Patient />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/nurse"
-                  element={
-                    <ProtectedRoute allowedRoles={["nurse"]}>
-                      <Nurse />
-                    </ProtectedRoute>
-                  }
-                />
-              </Routes>
-            </Router>
+            <Routes>
+              <Route index element={<Home />} />
+              <Route path="home" element={<Home />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="stats" element={<Stats />} />
+              <Route path="users" element={<Users />} />
+              <Route path="teampage" element={<TeamPage />} />
+              <Route
+                path="patient"
+                element={
+                  <ProtectedRoute allowedRoles={["patient"]}>
+                    <Patient />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/nurse"
+                element={
+                  <ProtectedRoute allowedRoles={["nurse"]}>
+                    <Nurse />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
           </AuthProvider>
         </ApolloProvider>
-      </BrowserRouter>
+      </Router>
     </Container>
   );
 }

@@ -20,7 +20,7 @@ function NavBar({ onLoginClick, onRegisterClick }) {
         <img src={homepagephoto} width={50} alt="logo" /> <b>Health Tracker</b>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
+      <Navbar.Collapse className="flex-column">
         <Nav className="ms-auto text-small" activeKey="home">
           {isLoggedIn && (
             <>
@@ -50,13 +50,18 @@ function NavBar({ onLoginClick, onRegisterClick }) {
               </Nav.Item>
 
               {/* User-specific dropdown */}
-              <Dropdown as={Nav.Item} align="end">
-                <Dropdown.Toggle as={Nav.Link} id="dropdown-custom-components">
-                  Welcome,{" "}
+              <Dropdown as={Nav.Item} align="end" className="nav-item">
+                <Dropdown.Toggle as={Nav.Link}>
+                  Welcome,
                   <strong>{`${userDetails?.firstName} ${userDetails?.lastName}`}</strong>
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item eventKey="logout" onClick={logout}>
+                  <Dropdown.Item
+                    eventKey="logout"
+                    onClick={logout}
+                    className="nav-item"
+                    align="end"
+                  >
                     Log out
                   </Dropdown.Item>
                 </Dropdown.Menu>

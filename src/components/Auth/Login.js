@@ -15,12 +15,13 @@ function getErrorMessageOrElse(error, orElse) {
 }
 
 function Login() {
+  const { login, isLoggedIn, userType, loading, error } = useAuth();
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const { login, isLoggedIn, userType, loading, error } = useAuth();
+
   const navigate = useNavigate();
 
   useEffect(() => {

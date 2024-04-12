@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import NavBar from "../NavBar";
-import SideBar from "./SideBar";
 import Dashboard from "./Dashboard";
+import SideBar from "../SideBar";
 import Stats from "./Stats";
 import Symptoms from "./Symptoms";
 import Notifications from "./Notifications";

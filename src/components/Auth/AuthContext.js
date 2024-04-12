@@ -5,10 +5,10 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import { jwtDecode } from "jwt-decode";
 import client from "../../Utils/apolloClient";
-import { LOGIN_MUTATION, GET_USER } from "../../Utils/graphQLService";
+import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { LOGIN_MUTATION, GET_USER } from "../../Utils/graphQLService";
 
 const AuthContext = createContext();
 console.log(client);
@@ -19,6 +19,29 @@ export const AuthProvider = ({ children }) => {
   const [userDetails, setUserDetails] = useState(null);
 
   const navigate = useNavigate();
+
+  const login = async (formData) => {
+    try {
+      const { data } = await client.mutate({
+        mutation: LOGIN_MUTATION,
+        variables: formData,
+      });
+
+      if (data && data.login && data.login.token) {
+        localStorage.setItem("token", data.login.token);
+        console.log("Login successful, token stored.");
+        const decoded = jwtDecode(data.login.token);
+        setIsLoggedIn(true);
+        setUserType(decoded.userType);
+        fetchUserDetails();
+        console.log("User type: ", decoded.userType);
+      } else {
+        console.error("Login failed: Token not received.");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+  };
 
   const logout = useCallback(() => {
     localStorage.removeItem("token");
@@ -58,29 +81,6 @@ export const AuthProvider = ({ children }) => {
       }
     }
   }, [logout]);
-
-  const login = async (formData) => {
-    try {
-      const { data } = await client.mutate({
-        mutation: LOGIN_MUTATION,
-        variables: formData,
-      });
-
-      if (data && data.login && data.login.token) {
-        localStorage.setItem("token", data.login.token);
-        console.log("Login successful, token stored.");
-        const decoded = jwtDecode(data.login.token);
-        setIsLoggedIn(true);
-        setUserType(decoded.userType);
-        fetchUserDetails();
-        console.log("User type: ", decoded.userType);
-      } else {
-        console.error("Login failed: Token not received.");
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-    }
-  };
 
   return (
     <AuthContext.Provider
