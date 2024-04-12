@@ -10,13 +10,13 @@ import Settings from "./components/Patient/Settings";
 import Stats from "./components/Patient/Stats";
 import Users from "./components/Users/Users";
 import TeamPage from "./components/TeamPage";
+import Game from "./components/Game/Game";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Container } from "react-bootstrap";
 
 function App() {
   return (
     <Container>
-      {" "}
       <Router>
         <ApolloProvider client={client}>
           <AuthProvider>
@@ -26,6 +26,7 @@ function App() {
               <Route path="settings" element={<Settings />} />
               <Route path="stats" element={<Stats />} />
               <Route path="users" element={<Users />} />
+              <Route path="game" element={<Game />} />
               <Route path="teampage" element={<TeamPage />} />
               <Route
                 path="patient"

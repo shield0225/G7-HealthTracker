@@ -21,12 +21,12 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const login = async (formData) => {
+    setError(null); // Reset error state before new login attempt
     try {
       const { data } = await client.mutate({
         mutation: LOGIN_MUTATION,
         variables: formData,
       });
-
       if (data && data.login && data.login.token) {
         localStorage.setItem("token", data.login.token);
         console.log("Login successful, token stored.");
@@ -86,6 +86,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{ isLoggedIn, userType, userDetails, login, logout }}
     >
+
       {children}
     </AuthContext.Provider>
   );
