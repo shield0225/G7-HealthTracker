@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const [userType, setUserType] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -48,24 +49,31 @@ export const AuthProvider = ({ children }) => {
     setIsLoggedIn(false);
     setUserType(null);
     setUserDetails(null);
-    navigate("/login");
+    navigate("/");
+    client.resetStore()
     console.log("Logged out.");
   }, [navigate]);
 
-  const fetchUserDetails = async () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const { data } = await client.query({
-          query: GET_USER,
-        });
-        setUserDetails(data.me);
-        console.log("User details fetched: ", data.me);
-      } catch (error) {
-        console.error("Error fetching user details: ", error);
+  const fetchUserDetails = () => {
+    return new Promise(async (resolve, reject) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const { data } = await client.query({
+            query: GET_USER,
+          });
+          setUserDetails(data.me);
+          resolve(data.me);
+        } catch (error) {
+          console.error("Error fetching user details: ", error);
+          reject(error); 
+        }
+      } else {
+        reject("Token not found"); 
       }
-    }
+    });
   };
+  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -84,7 +92,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, userType, userDetails, login, logout }}
+      value={{ isLoggedIn, userType, userDetails, login, logout, fetchUserDetails }}
     >
 
       {children}

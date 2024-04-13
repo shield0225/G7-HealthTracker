@@ -42,6 +42,33 @@ const getHighestSystolicBloodPressureByDate = (dailyInformation = []) =>
     }
   );
 
+const getHighestHeartRateByDate = (dailyInformation = []) =>
+  groupDailyInformation(
+    dailyInformation,
+    "heartRate",
+    (existingValue, newValue) => {
+      return newValue > existingValue;
+    }
+);
+
+const getHighestRespirationRateByDate = (dailyInformation = []) =>
+  groupDailyInformation(
+    dailyInformation,
+    "respirationRate",
+    (existingValue, newValue) => {
+      return newValue > existingValue;
+    }
+  );
+
+const getHighestBodyTemperatureByDate = (dailyInformation = []) =>
+  groupDailyInformation(
+    dailyInformation,
+    "bodyTemperature",
+    (existingValue, newValue) => {
+      return newValue > existingValue;
+    }
+  );
+
 const filterGroupedDataByWeekDates = (groupedByDate = {}, weekDates = []) => {
   const filterResult = [];
   for (let i = 0; i < weekDates.length; i++) {
@@ -92,6 +119,9 @@ export {
   groupDailyInformation,
   getHighestDiastolicBloodPressureByDate,
   getHighestSystolicBloodPressureByDate,
+  getHighestHeartRateByDate,
+  getHighestRespirationRateByDate,
+  getHighestBodyTemperatureByDate,
   getAverageDailyInformationByWeeks,
   filterGroupedDataByWeekDates,
 };

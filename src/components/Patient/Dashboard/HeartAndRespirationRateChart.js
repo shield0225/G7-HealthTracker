@@ -2,10 +2,10 @@ import React from "react";
 import Chart from "react-apexcharts";
 import DashboardCard from "./DashboardCard";
 import useWeeklyDate from "../../../hooks/WeeklyDateHook";
-import { patientData } from "../../../mock/patient-data";
 import {
-  getHighestDiastolicBloodPressureByDate,
-  getHighestSystolicBloodPressureByDate,
+  getHighestBodyTemperatureByDate,
+  getHighestHeartRateByDate,
+  getHighestRespirationRateByDate,
 } from "../../../helpers/chart-helper";
 import WeekController from "./WeekController";
 
@@ -57,24 +57,26 @@ const OPTIONS_CHART = {
   },
 };
 
-const HeartAndRespirationRateChart = () => {
+const HeartAndRespirationRateChart = ({ vitalSignsInformation = []}) => {
   const { weekDates, nextWeek, prevWeek, isInitialState, reset, monthScope } =
     useWeeklyDate();
 
-  const highestDiastolicBloodPressureByDate =
-    getHighestDiastolicBloodPressureByDate(patientData.dailyInformation);
-  const highestSystolicBloodPressureByDate =
-    getHighestSystolicBloodPressureByDate(patientData.dailyInformation);
+  const highestHeartRateByDate =
+    getHighestHeartRateByDate(vitalSignsInformation);
+  const highestRespirationRateByDate =
+    getHighestRespirationRateByDate(vitalSignsInformation);
+  const highestBodyTemperatureByDate =
+    getHighestBodyTemperatureByDate(vitalSignsInformation);
 
-  const highestDiastolicBloodPressureData = [];
-  const highestSystolicBloodPressureData = [];
+  const highestHeartRateData = [];
+  const highestRespirationRateData = [];
+  const highestBodyTemperatureData = [];
 
   for (let i = 0; i < weekDates.length; i++) {
     const day = weekDates[i];
-    highestDiastolicBloodPressureData[i] =
-      highestDiastolicBloodPressureByDate[day] || 0;
-    highestSystolicBloodPressureData[i] =
-      highestSystolicBloodPressureByDate[day] || 0;
+    highestHeartRateData[i] = highestHeartRateByDate[day] || 0;
+    highestRespirationRateData[i] = highestRespirationRateByDate[day] || 0;
+    highestBodyTemperatureData[i] = highestBodyTemperatureByDate[day] || 0;
   }
 
   const optionscolumnchart = {
@@ -86,17 +88,17 @@ const HeartAndRespirationRateChart = () => {
     {
       name: "Heart Rate",
       type: "column",
-      data: [28, 29, 33, 36, 32, 32, 33],
+      data: highestHeartRateData,
     },
     {
       name: "Respiration Rate",
       type: "column",
-      data: [12, 11, 14, 18, 17, 13, 13],
+      data: highestRespirationRateData,
     },
     {
       name: "Body Temperature",
       type: "line",
-      data: [12, 11, 14, 18, 17, 13, 13],
+      data: highestBodyTemperatureData,
     },
   ];
 
