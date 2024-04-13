@@ -7,10 +7,9 @@ import {
 } from "@tabler/icons-react";
 import Chart from "react-apexcharts";
 import { getAverageDailyInformationByWeeks } from "../../../helpers/chart-helper";
-import { patientData } from "../../../mock/patient-data";
 import { calculatePercentageHigher } from "../../../helpers/number-helper";
 
-const DiastolicBloodAverageWeeksChart = () => {
+const DiastolicBloodAverageWeeksChart = ({ vitalSignsInformation = []}) => {
   // chart color
   const theme = useTheme();
   const primary = theme.palette.primary.main;
@@ -18,7 +17,7 @@ const DiastolicBloodAverageWeeksChart = () => {
   const errorlight = "#fdede8";
 
   const averageResult = getAverageDailyInformationByWeeks(
-    patientData.dailyInformation,
+    vitalSignsInformation,
     2,
     ["diastolicBloodPressure", "systolicBloodPressure"]
   );

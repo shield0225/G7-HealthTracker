@@ -7,7 +7,17 @@ export const GET_USER = gql`
       email
       firstName
       lastName
-      type
+      type,
+      vitalSignsInformation {
+        bodyTemperature
+        heartRate
+        systolicBloodPressure
+        diastolicBloodPressure
+        respirationRate
+        weight
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
