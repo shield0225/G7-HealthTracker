@@ -1,113 +1,172 @@
 import React, { useState } from "react";
+import { useQuery, useMutation } from "@apollo/client";
+import { GET_USER, ADD_SYMPTOMS_INFORMATION } from "../../Utils/graphQLService";
 import "./InfoArea.css";
 import { Form, Row, Col, Button } from "react-bootstrap";
 
 function Symptoms() {
-  const [newSymptom, setNewSymptom] = useState("");
-  const [symptomsList, setSymptomsList] = useState([]);
+  const [selectedSymptoms, setSelectedSymptoms] = useState([]);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const { data: userData } = useQuery(GET_USER);
+  const userId = userData?.me?._id;
+  const [selectedContact, setSelectedContact] = useState("no");
+
+  const [addSymptoms, { loading, data, error: mutationError }] = useMutation(
+    ADD_SYMPTOMS_INFORMATION
+  );
 
   const symptoms = [
-    "Fever",
-    "Tiredness",
-    "Dry Cough",
-    "Fatigue",
-    "Difficulty in Breathing",
-    "Pains",
-    "Nasal Congestion",
-    "Runny Nose",
-    "Diarrhea",
+    { displayName: "Fever", schemaKey: "fever" },
+    { displayName: "Tiredness", schemaKey: "tiredness" },
+    { displayName: "Dry Cough", schemaKey: "dryCough" },
+    {
+      displayName: "Difficulty in Breathing",
+      schemaKey: "difficultyInBreathing",
+    },
+    { displayName: "Sore Throat", schemaKey: "soreThroat" },
+    { displayName: "Pains", schemaKey: "pains" },
+    { displayName: "Nasal Congestion", schemaKey: "nasalCongestion" },
+    { displayName: "Runny Nose", schemaKey: "runnyNose" },
+    { displayName: "Diarrhea", schemaKey: "diarrhea" },
   ];
 
-  const [error, setError] = useState(null);
-  const [data, setData] = useState(null);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (newSymptom.trim() !== "" && !symptomsList.includes(newSymptom)) {
-      setSymptomsList([...symptomsList, newSymptom]);
-      setNewSymptom("");
-      setData(true);
-      console.log("Symptom/s added successfully!");
-    } else {
-      setError("Failed to add symptoms. Please try again.");
-      console.log("Failed to add symptoms. Please try again.");
-    }
+  const handleSymptomClick = (symptom) => {
+    setSelectedSymptoms((prevSelectedSymptoms) => {
+      const isAlreadySelected = prevSelectedSymptoms.some(
+        (selected) => selected === symptom.displayName
+      );
+      return isAlreadySelected
+        ? prevSelectedSymptoms.filter(
+            (displayName) => displayName !== symptom.displayName
+          )
+        : [...prevSelectedSymptoms, symptom.displayName];
+    });
   };
 
-  const [selectedSymptoms, setSelectedSymptoms] = useState([]);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  const handleSymptomClick = (symptom) => {
-    if (selectedSymptoms.includes(symptom)) {
-      setSelectedSymptoms(selectedSymptoms.filter((s) => s !== symptom));
-    } else {
-      setSelectedSymptoms([...selectedSymptoms, symptom]);
+    if (selectedSymptoms.length === 0) {
+      setError("Please select at least one symptom.");
+      return;
+    }
+
+    const symptomsPayload = symptoms.reduce((acc, symptom) => {
+      acc[symptom.schemaKey] = selectedSymptoms.includes(symptom.displayName);
+      return acc;
+    }, {});
+
+    console.log("Symptoms Payload:", symptomsPayload);
+
+    try {
+      const response = await addSymptoms({
+        variables: {
+          _id: userId,
+          ...symptomsPayload,
+          contact: selectedContact,
+        },
+      });
+      console.log("Submission successful, server response:", response);
+      setSuccess(true);
+      setError(null);
+      setSelectedSymptoms([]); // Optionally clear selected symptoms after successful submission
+    } catch (err) {
+      console.error("Error submitting symptoms:", err);
+      setError(
+        `Failed to submit symptoms. ${err.message || "Please try again."}`
+      );
     }
   };
 
   return (
     <>
       <div className="form-container-no-grid">
-        <div className="symptoms-grid">
-          <Form onSubmit={handleSubmit}>
-            <Row className="symptoms-grid">
-              {symptoms.map((symptom) => (
-                <Col
-                  md={4}
-                  key={symptom}
-                  className={`symptom-card ${
-                    selectedSymptoms.includes(symptom) ? "selected" : ""
-                  }`}
-                >
-                  <div
-                    className="card-content"
-                    onClick={() => handleSymptomClick(symptom)}
-                  >
-                    {symptom}
-                  </div>
-                </Col>
-              ))}
-            </Row>
-            <div className="button-container">
-              <Button
-                type="submit"
-                className="submit-button"
-                style={{ width: 200 }}
+        <Form onSubmit={handleSubmit}>
+          <Row className="symptoms-grid">
+            {symptoms.map((symptom) => (
+              <Col
+                md={4}
+                key={symptom.schemaKey}
+                className={`symptom-card ${
+                  selectedSymptoms.includes(symptom.displayName)
+                    ? "selected"
+                    : ""
+                }`}
+                onClick={() => handleSymptomClick(symptom)}
               >
-                Submit Selections
-              </Button>
+                <div className="card-content">{symptom.displayName}</div>
+              </Col>
+            ))}
+          </Row>
+
+          <Row>
+            <Form.Group as={Row} controlId="contact">
+              <Form.Label column md={6}>
+                Recently had contact with a Covid-19 patient?
+              </Form.Label>
+              <Col md={6}>
+                <Form.Check
+                  inline
+                  type="radio"
+                  label="No"
+                  name="contact"
+                  value="no"
+                  checked={selectedContact === "no"}
+                  onChange={(e) => setSelectedContact(e.target.value)}
+                />
+                <Form.Check
+                  inline
+                  type="radio"
+                  label="Yes"
+                  name="contact"
+                  value="yes"
+                  checked={selectedContact === "yes"}
+                  onChange={(e) => setSelectedContact(e.target.value)}
+                />
+                <Form.Check
+                  inline
+                  type="radio"
+                  label="Don't Know"
+                  name="contact"
+                  value="dont-know"
+                  checked={selectedContact === "dont-know"}
+                  onChange={(e) => setSelectedContact(e.target.value)}
+                />
+              </Col>
+            </Form.Group>
+          </Row>
+
+          <div className="button-container">
+            <Button
+              type="submit"
+              className="submit-button"
+              style={{ width: 200 }}
+            >
+              Submit Selections
+            </Button>
+          </div>
+          {success && (
+            <div className="button-container success-message">
+              Submitted successfully!
+              <br /> We appreciate your patience. Your nurse will get back to
+              you with recommendations.
             </div>
-            {data && (
-              <div className="button-container success-message">
-                Submitted successfully! Please wait for your nurse's
-                recommendations.
-              </div>
-            )}
-            {error && (
-              <div className="button-container error-message">{error}</div>
-            )}
-          </Form>
-        </div>
-      </div>
-      <div className="symptoms-list">
-        <h2>Symptoms History</h2>
-        {symptomsList.length === 0 ? (
-          <p>No symptoms recorded yet.</p>
-        ) : (
-          <table>
-            <thead>
-              <tr>
-                <th>Symptom</th>
-              </tr>
-            </thead>
-            <tbody>
-              {symptomsList.map((symptom, index) => (
-                <tr key={index}>
-                  <td>{symptom}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+          )}
+          {error && (
+            <div className="button-container error-message">{error}</div>
+          )}
+          {mutationError && (
+            <div className="button-container error-message">
+              {mutationError.message}
+            </div>
+          )}
+          {loading && (
+            <div className="button-container loading-message">
+              Submitting...
+            </div>
+          )}
+        </Form>
       </div>
     </>
   );

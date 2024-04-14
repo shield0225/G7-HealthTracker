@@ -7,7 +7,7 @@ export const GET_USER = gql`
       email
       firstName
       lastName
-      type,
+      type
       vitalSignsInformation {
         bodyTemperature
         heartRate
@@ -91,6 +91,48 @@ export const ADD_VITALS_INFORMATION = gql`
       diastolicBloodPressure
       respirationRate
       weight
+    }
+  }
+`;
+
+export const ADD_SYMPTOMS_INFORMATION = gql`
+  mutation AddSymptomsData(
+    $_id: String!
+    $fever: Boolean
+    $tiredness: Boolean
+    $dryCough: Boolean
+    $difficultyInBreathing: Boolean
+    $soreThroat: Boolean
+    $pains: Boolean
+    $nasalCongestion: Boolean
+    $runnyNose: Boolean
+    $diarrhea: Boolean
+    $contact: String
+  ) {
+    addSymptomsData(
+      _id: $_id
+      fever: $fever
+      tiredness: $tiredness
+      dryCough: $dryCough
+      difficultyInBreathing: $difficultyInBreathing
+      soreThroat: $soreThroat
+      pains: $pains
+      nasalCongestion: $nasalCongestion
+      runnyNose: $runnyNose
+      diarrhea: $diarrhea
+      contact: $contact
+    ) {
+      _id
+      fever
+      tiredness
+      dryCough
+      difficultyInBreathing
+      soreThroat
+      pains
+      nasalCongestion
+      runnyNose
+      diarrhea
+      contact
     }
   }
 `;
