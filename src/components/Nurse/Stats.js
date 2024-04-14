@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; 
 import "./InfoArea.css";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Button, Row, Col, Alert } from "react-bootstrap"; 
 import { FaTemperatureLow } from "react-icons/fa";
 import { FaWeightScale } from "react-icons/fa6";
 import { TbHeartRateMonitor } from "react-icons/tb";
 import { ReactComponent as RespIcon } from "../../assets/material-symbols-light--respiratory-rate.svg";
 import { ReactComponent as BloodPressureIcon } from "../../assets/blood-pressure-icon.svg";
 import "bootstrap/dist/css/bootstrap.min.css";
+
+const token = localStorage.getItem("token");
 
 function Stats() {
   const [formData, setFormData] = useState({
@@ -15,74 +17,152 @@ function Stats() {
     bloodPressure: "",
     respirationRate: "",
     weight: "",
+    selectedPatientId: "", 
   });
+  const [patients, setPatients] = useState([]);    
+  const [showMessage, setShowMessage] = useState(false); 
+     
+    useEffect(() => {
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const graphqlUrl = "http://localhost:4000/graphql/";
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjA4ZWZjMDUwOGViMjliMDQ4ZWY4MWYiLCJ1c2VyVHlwZSI6Im51cnNlIiwiaWF0IjoxNzExODYxOTY0LCJleHAiOjE3NDM0MTk1NjR9.j9wpnJzWWEnJgoYKXrQlQBiwNHIs0mdsnLIxEIYTpRE";
-
-    // Construct the mutation query
-    //${formData.bloodPressureSystolic}
-    const mutation = `
-  mutation {
-    addVitalsInformation(
-      _id: "6608efc4508eb29b048ef82a"
-      bodyTemperature: ${formData.bodyTemperature}
-      heartRate:  ${formData.heartRate}
-      systolicBloodPressure: ${formData.bloodPressureSystolic}
-      diastolicBloodPressure: ${formData.bloodPressureDiastolic}   
-      respirationRate: ${formData.respirationRate}
-      weight: ${formData.weight}
-    ) {
-      _id
-      bodyTemperature
-      heartRate
-      systolicBloodPressure
-      diastolicBloodPressure
-      respirationRate
-      weight
-    }
-  }
   
-  `;
-
-    try {
-      // Send the mutation request
-      const response = await fetch(graphqlUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
-        },
-        body: JSON.stringify({ query: mutation }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch");
+      const fetchData = async () => {
+        try {
+          const response = await fetch("http://localhost:4000/graphql/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              query: `
+                query {
+                  users {
+                    _id
+                    firstName
+                    lastName
+                    email
+                    type
+                  }
+                }
+              `,
+            }),
+          });
+  
+          if (!response.ok) {
+            throw new Error("Failed to fetch data");
+          }
+  
+          const data = await response.json();
+          setPatients(data.data.users);
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      };
+  
+      fetchData();
+    }, []);
+  
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    };
+  
+    const handlePatientChange = (e) => {
+      const { value } = e.target;
+      setFormData((prevState) => ({
+        ...prevState,
+        selectedPatientId: value,
+      }));
+    };
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      const graphqlUrl = "http://localhost:4000/graphql/";
+      const mutation = `
+        mutation {
+          addVitalsInformation(
+            _id: "${formData.selectedPatientId}"
+            bodyTemperature: ${formData.bodyTemperature}
+            heartRate:  ${formData.heartRate}
+            systolicBloodPresure: ${formData.bloodPressureSystolic}
+            diastolicBloodPresure: ${formData.bloodPressureDiastolic}   
+            respirationRate: ${formData.respirationRate}
+            weight: ${formData.weight}
+          ) {
+            _id
+            bodyTemperature
+            heartRate
+            systolicBloodPresure
+            diastolicBloodPresure
+            respirationRate
+            weight
+          }
+        }
+      `;
+  
+      try {
+        const response = await fetch(graphqlUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ query: mutation }),
+        });
+  
+        if (!response.ok) {
+          throw new Error("Failed to fetch");
+        }
+  
+        const responseData = await response.json();
+        console.log(responseData);
+        setShowMessage(true);
+        // Reset form data after successful submission
+        setFormData({
+          bodyTemperature: "",
+          heartRate: "",
+          bloodPressure: "",
+          respirationRate: "",
+          weight: "",
+          selectedPatientId: "", 
+          bloodPressureSystolic: "",
+          bloodPressureDiastolic:"",
+        });        
+      } catch (error) {
+        console.error("Error:", error);
       }
-
-      // Parse the response JSON
-      const responseData = await response.json();
-
-      // Log the response data
-      console.log(responseData);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  return (
-    <Form className="form-container" onSubmit={handleSubmit}>
+    };
+  
+    return (
+      <>
+      {showMessage && ( 
+        <Alert variant="success" onClose={() => setShowMessage(false)} dismissible>
+          <Alert.Heading>Success!</Alert.Heading>
+          <p>The information was updated.</p>
+        </Alert>
+      )}      
+      <Form className="form-container" onSubmit={handleSubmit}>
+        <Row className="form-field align-items-left">
+          <Col xs={12}>
+            <Form.Label className="label">Select Patient:</Form.Label>
+            <Form.Control
+              as="select"
+              name="selectedPatientId"
+              value={formData.selectedPatientId}
+              onChange={handlePatientChange}
+            >
+              <option value="">Select a Patient</option>
+              {patients.map((patient) => (
+                <option key={patient._id} value={patient._id}>
+                  {patient.firstName} {patient.lastName}
+                </option>
+              ))}
+            </Form.Control>
+          </Col>
+        </Row>
       <Row className=" form-field align-items-left">
         <Col xs={1}>
           <FaTemperatureLow className="icon" />
@@ -230,6 +310,7 @@ function Stats() {
         </Col>
       </Row>
     </Form>
+    </>
   );
 }
 

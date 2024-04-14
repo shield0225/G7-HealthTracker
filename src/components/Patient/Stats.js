@@ -11,6 +11,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { ADD_VITALS_INFORMATION, GET_USER } from "../../Utils/graphQLService";
 
 function Stats() {
+
   const [errors, setErrors] = useState({});
   const { data: userData } = useQuery(GET_USER);
   const userId = userData?.me?._id;

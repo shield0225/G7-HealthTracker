@@ -1,26 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 import "./Dashboard.css";
+import { useAuth } from "../Auth/AuthContext";
+
 
 function Dashboard() {
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
-
+  const {userDetails } = useAuth();
+  
   // Function to toggle visibility of sections
   const toggleSection = (sectionId) => {
     const section = document.getElementById(sectionId);
     section.classList.toggle('hidden');
   };
 
+  const token = localStorage.getItem("token");
+  const graphqlUrl ="http://localhost:4000/graphql/";
+
   useEffect(() => {
+
+    console.log("userDetails firstName: "+userDetails?.firstName);
+    console.log("userDetails firstName: "+userDetails?._id);
+
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:4000/graphql/", {
+        const response = await fetch(graphqlUrl, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjA4ZWZjMDUwOGViMjliMDQ4ZWY4MWYiLCJ1c2VyVHlwZSI6Im51cnNlIiwiaWF0IjoxNzExODYxOTY0LCJleHAiOjE3NDM0MTk1NjR9.j9wpnJzWWEnJgoYKXrQlQBiwNHIs0mdsnLIxEIYTpRE",
+              `Bearer ${token}`,              
           },
           body: JSON.stringify({
             query: `
@@ -51,10 +61,54 @@ function Dashboard() {
     fetchData();
   }, []);
 
-  const handlePatientSelect = (patient) => {
-    setSelectedPatient(patient);
+  //const handlePatientSelect = (patient) => {
+//    setSelectedPatient(patient);
+  //};
+  const handlePatientSelect = async (patient) => {
+    try {
+      const response = await fetch(graphqlUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:  `Bearer ${token}`,              
+        },
+        body: JSON.stringify({
+          query: `
+            query GetPatientSigns($_id: String!) {
+              patient(_id: $_id) {
+                _id
+                firstName
+                lastName
+                email
+                type
+                vitalSignsInformation {
+                  bodyTemperature
+                  heartRate
+                  respirationRate
+                  weight
+                  createdAt
+                  updatedAt
+                }
+              }
+            }
+          `,
+          variables: {
+            _id: patient._id,
+          },
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to fetch patient signs");
+      }
+  
+      const data = await response.json();
+      setSelectedPatient(data.data.patient);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
-
+  
   return (
     <div className="dashboard-container">
       <div className="table-container">
@@ -66,6 +120,10 @@ function Dashboard() {
             </tr>
           <tbody id="patient-info">
             <tr>
+              <td>Id:</td>
+              <td>{selectedPatient ? selectedPatient._id: ""}</td>
+            </tr>            
+            <tr>
               <td>Name:</td>
               <td>{selectedPatient ? selectedPatient.firstName + " " + selectedPatient.lastName : ""}</td>
             </tr>
@@ -74,40 +132,32 @@ function Dashboard() {
               <td>{selectedPatient ? selectedPatient.email : ""}</td>
             </tr>
             <tr>
-              <td>Gender:</td>
-              <td>Male</td>
             </tr>
 
             {/* Hidden Sections */}
-            <tr className="section-header" onClick={() => toggleSection('signs')}>
-              <th colSpan="2">Signs <button>Show/Hide</button></th>
+            <tr className="section-header" onClick={() => toggleSection("signs")}>
+              <th  colSpan="2">Signs </th>
             </tr>
-            <tbody id="signs" className="hidden">
-              <tr>
-                <td>Body Temperature:</td>
-                <td>{selectedPatient ? selectedPatient.bodyTemperature : ""}</td>
-              </tr>
-              <tr>
-                <td>Heart Rate:</td>
-                <td>{selectedPatient ? selectedPatient.heartRate : ""}</td>
-              </tr>
-              <tr>
-                <td>Systolic Blood Pressure:</td>
-                <td>{selectedPatient ? selectedPatient.systolicBloodPresure : ""}</td>
-              </tr>
-              <tr>
-                <td>Diastolic Blood Pressure:</td>
-                <td>{selectedPatient ? selectedPatient.diastolicBloodPresure : ""}</td>
-              </tr>
-              <tr>
-                <td>Respiration Rate:</td>
-                <td>{selectedPatient ? selectedPatient.respirationRate : ""}</td>
-              </tr>
-              <tr>
-                <td>Weight:</td>
-                <td>{selectedPatient ? selectedPatient.weight : ""}</td>
-              </tr>
-            </tbody>
+
+            {selectedPatient &&
+                selectedPatient.vitalSignsInformation &&
+                selectedPatient.vitalSignsInformation.length > 0 && (
+                  <><tr>
+                  <td>Body Temperature:</td>
+                  <td>{selectedPatient.vitalSignsInformation[selectedPatient.vitalSignsInformation.length - 1].bodyTemperature}</td>
+                </tr><tr>
+                    <td>Heart Rate:</td>
+                    <td>{selectedPatient.vitalSignsInformation[selectedPatient.vitalSignsInformation.length - 1].heartRate}</td>
+                  </tr><tr>
+                    <td>Respiration Rate:</td>
+                    <td>{selectedPatient.vitalSignsInformation[selectedPatient.vitalSignsInformation.length - 1].respirationRate}</td>
+                  </tr><tr>
+                    <td>Weight:</td>
+                    <td>{selectedPatient.vitalSignsInformation[selectedPatient.vitalSignsInformation.length - 1].weight}</td>
+                  </tr></>
+              )}
+
+
 
             <tr className="section-header" onClick={() => toggleSection('health-care-info')}>
               <th colSpan="2">Health Care Info <button>Show/Hide</button></th>
@@ -143,7 +193,10 @@ function Dashboard() {
                 <td>Contact Number:</td>
                 <td>123-456-7890</td>
               </tr>
+              <tr>
+              </tr>
             </tbody>
+
           </tbody>
         </table>
 
