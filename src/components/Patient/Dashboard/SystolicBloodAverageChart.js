@@ -11,7 +11,6 @@ import {
   filterGroupedDataByWeekDates,
   getHighestSystolicBloodPressureByDate,
 } from "../../../helpers/chart-helper";
-import { patientData } from "../../../mock/patient-data";
 import {
   generateWeekDates,
   getStartOfWeek,
@@ -19,7 +18,7 @@ import {
 } from "../../../helpers/date-helper";
 import { calculatePercentageHigher } from "../../../helpers/number-helper";
 
-const SystolicBloodAverageChart = () => {
+const SystolicBloodAverageChart = ({ vitalSignsInformation = []}) => {
   // chart color
   const theme = useTheme();
   const secondary = theme.palette.secondary.main;
@@ -27,7 +26,7 @@ const SystolicBloodAverageChart = () => {
   const errorlight = "#fdede8";
 
   const highestSystolicBloodPressureByDate =
-    getHighestSystolicBloodPressureByDate(patientData.dailyInformation);
+    getHighestSystolicBloodPressureByDate(vitalSignsInformation);
   const startOfCurrentWeek = getStartOfWeek(new Date());
   const startOfLastWeek = subtractWeeks(startOfCurrentWeek, 1);
   const currentWeekDates = generateWeekDates(startOfCurrentWeek);

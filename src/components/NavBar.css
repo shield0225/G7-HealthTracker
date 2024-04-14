@@ -3,7 +3,7 @@
 }
 
 .custom-navbar {
-    border-bottom: 1px solid #ccc;
+    /* border-bottom: 1px solid #ccc; */
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     width: 100%;
@@ -70,4 +70,11 @@
 
 .text-large {
     font-size: 24px;
+}
+
+.nav-item-logout{
+    margin: auto !important;
+    background-color: #eaeaea !important;
+    font-size: 12px;
+    margin: 0;
 }

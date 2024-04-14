@@ -7,7 +7,6 @@ import {
   getMonthScope,
   mapDatesToWeeklyLabel,
 } from "../../../helpers/date-helper";
-import { patientData } from "../../../mock/patient-data";
 import {
   getHighestDiastolicBloodPressureByDate,
   getHighestSystolicBloodPressureByDate,
@@ -78,7 +77,7 @@ const OPTIONS_CHART = {
   },
 };
 
-const BloodPressureOverviewChart = () => {
+const BloodPressureOverviewChart = ({ vitalSignsInformation = []}) => {
   const { weekDates, nextWeek, prevWeek, isInitialState, reset } =
     useWeeklyDate();
   const monthScope = getMonthScope(weekDates);
@@ -86,9 +85,9 @@ const BloodPressureOverviewChart = () => {
   const categories = mapDatesToWeeklyLabel(weekDates);
 
   const highestDiastolicBloodPressureByDate =
-    getHighestDiastolicBloodPressureByDate(patientData.dailyInformation);
+    getHighestDiastolicBloodPressureByDate(vitalSignsInformation);
   const highestSystolicBloodPressureByDate =
-    getHighestSystolicBloodPressureByDate(patientData.dailyInformation);
+    getHighestSystolicBloodPressureByDate(vitalSignsInformation);
 
   const highestDiastolicBloodPressureData = [];
   const highestSystolicBloodPressureData = [];
