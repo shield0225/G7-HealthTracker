@@ -87,16 +87,16 @@ function Stats() {
             _id: "${formData.selectedPatientId}"
             bodyTemperature: ${formData.bodyTemperature}
             heartRate:  ${formData.heartRate}
-            systolicBloodPressure: ${formData.bloodPressureSystolic}
-            diastolicBloodPressure: ${formData.bloodPressureDiastolic}   
+            systolicBloodPresure: ${formData.bloodPressureSystolic}
+            diastolicBloodPresure: ${formData.bloodPressureDiastolic}   
             respirationRate: ${formData.respirationRate}
             weight: ${formData.weight}
           ) {
             _id
             bodyTemperature
             heartRate
-            systolicBloodPressure
-            diastolicBloodPressure
+            systolicBloodPresure
+            diastolicBloodPresure
             respirationRate
             weight
           }
@@ -119,7 +119,7 @@ function Stats() {
   
         const responseData = await response.json();
         console.log(responseData);
-        setShowMessage(true); // Show the message when submission is successful
+        setShowMessage(true);
         // Reset form data after successful submission
         setFormData({
           bodyTemperature: "",
@@ -138,7 +138,7 @@ function Stats() {
   
     return (
       <>
-      {showMessage && ( // Render the message if showMessage is true
+      {showMessage && ( 
         <Alert variant="success" onClose={() => setShowMessage(false)} dismissible>
           <Alert.Heading>Success!</Alert.Heading>
           <p>The information was updated.</p>
