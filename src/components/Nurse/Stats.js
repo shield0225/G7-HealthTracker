@@ -118,7 +118,6 @@ function Stats() {
         }
   
         const responseData = await response.json();
-        console.log(responseData);
         setShowMessage(true);
         // Reset form data after successful submission
         setFormData({

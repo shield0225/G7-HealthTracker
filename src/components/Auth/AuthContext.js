@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 import { LOGIN_MUTATION, GET_USER } from "../../Utils/graphQLService";
 
 const AuthContext = createContext();
-console.log(client);
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
@@ -30,12 +29,10 @@ export const AuthProvider = ({ children }) => {
       });
       if (data && data.login && data.login.token) {
         localStorage.setItem("token", data.login.token);
-        console.log("Login successful, token stored.");
         const decoded = jwtDecode(data.login.token);
         setIsLoggedIn(true);
         setUserType(decoded.userType);
         fetchUserDetails();
-        console.log("User type: ", decoded.userType);
       } else {
         console.error("Login failed: Token not received.");
       }
@@ -51,7 +48,6 @@ export const AuthProvider = ({ children }) => {
     setUserDetails(null);
     navigate("/");
     client.resetStore()
-    console.log("Logged out.");
   }, [navigate]);
 
   const fetchUserDetails = () => {
@@ -84,7 +80,7 @@ export const AuthProvider = ({ children }) => {
         setUserType(decoded.userType);
         fetchUserDetails();
       } catch (error) {
-        console.log("Error decoding the token: ", error);
+        console.error("Error decoding the token: ", error);
         logout();
       }
     }
