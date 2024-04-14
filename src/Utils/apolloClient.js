@@ -7,7 +7,9 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 
-const httpLink = new HttpLink({ uri: "http://localhost:4000/graphql" });
+const httpLink = new HttpLink({
+  uri: "https://comp308-group7.onrender.com/graphql",
+});
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem("token");

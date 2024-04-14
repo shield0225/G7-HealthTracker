@@ -3,20 +3,19 @@ import { Table } from "react-bootstrap";
 import "./Dashboard.css";
 import { useAuth } from "../Auth/AuthContext";
 
-
 function Dashboard() {
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
-  const {userDetails } = useAuth();
-  
+  const { userDetails } = useAuth();
+
   // Function to toggle visibility of sections
   const toggleSection = (sectionId) => {
     const section = document.getElementById(sectionId);
-    section.classList.toggle('hidden');
+    section.classList.toggle("hidden");
   };
 
   const token = localStorage.getItem("token");
-  const graphqlUrl ="http://localhost:4000/graphql/";
+  const graphqlUrl = "https://comp308-group7.onrender.com/graphql/";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,8 +24,7 @@ function Dashboard() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization:
-              `Bearer ${token}`,              
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             query: `
@@ -58,7 +56,7 @@ function Dashboard() {
   }, []);
 
   //const handlePatientSelect = (patient) => {
-//    setSelectedPatient(patient);
+  //    setSelectedPatient(patient);
   //};
   const handlePatientSelect = async (patient) => {
     try {
@@ -66,7 +64,7 @@ function Dashboard() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization:  `Bearer ${token}`,              
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           query: `
@@ -93,70 +91,107 @@ function Dashboard() {
           },
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error("Failed to fetch patient signs");
       }
-  
+
       const data = await response.json();
       setSelectedPatient(data.data.patient);
     } catch (error) {
       console.error("Error:", error);
     }
   };
-  
+
   return (
     <div className="dashboard-container">
       <div className="table-container">
-
         <h2>Patient Information</h2>
         <table border="1">
-        <tr className="section-header">
-              <th colSpan="2"></th>
-            </tr>
+          <tr className="section-header">
+            <th colSpan="2"></th>
+          </tr>
           <tbody id="patient-info">
             <tr>
               <td>Id:</td>
-              <td>{selectedPatient ? selectedPatient._id: ""}</td>
-            </tr>            
+              <td>{selectedPatient ? selectedPatient._id : ""}</td>
+            </tr>
             <tr>
               <td>Name:</td>
-              <td>{selectedPatient ? selectedPatient.firstName + " " + selectedPatient.lastName : ""}</td>
+              <td>
+                {selectedPatient
+                  ? selectedPatient.firstName + " " + selectedPatient.lastName
+                  : ""}
+              </td>
             </tr>
             <tr>
               <td>Email:</td>
               <td>{selectedPatient ? selectedPatient.email : ""}</td>
             </tr>
-            <tr>
-            </tr>
+            <tr></tr>
 
             {/* Hidden Sections */}
-            <tr className="section-header" onClick={() => toggleSection("signs")}>
-              <th  colSpan="2">Signs </th>
+            <tr
+              className="section-header"
+              onClick={() => toggleSection("signs")}
+            >
+              <th colSpan="2">Signs </th>
             </tr>
 
             {selectedPatient &&
-                selectedPatient.vitalSignsInformation &&
-                selectedPatient.vitalSignsInformation.length > 0 && (
-                  <><tr>
-                  <td>Body Temperature:</td>
-                  <td>{selectedPatient.vitalSignsInformation[selectedPatient.vitalSignsInformation.length - 1].bodyTemperature}</td>
-                </tr><tr>
+              selectedPatient.vitalSignsInformation &&
+              selectedPatient.vitalSignsInformation.length > 0 && (
+                <>
+                  <tr>
+                    <td>Body Temperature:</td>
+                    <td>
+                      {
+                        selectedPatient.vitalSignsInformation[
+                          selectedPatient.vitalSignsInformation.length - 1
+                        ].bodyTemperature
+                      }
+                    </td>
+                  </tr>
+                  <tr>
                     <td>Heart Rate:</td>
-                    <td>{selectedPatient.vitalSignsInformation[selectedPatient.vitalSignsInformation.length - 1].heartRate}</td>
-                  </tr><tr>
+                    <td>
+                      {
+                        selectedPatient.vitalSignsInformation[
+                          selectedPatient.vitalSignsInformation.length - 1
+                        ].heartRate
+                      }
+                    </td>
+                  </tr>
+                  <tr>
                     <td>Respiration Rate:</td>
-                    <td>{selectedPatient.vitalSignsInformation[selectedPatient.vitalSignsInformation.length - 1].respirationRate}</td>
-                  </tr><tr>
+                    <td>
+                      {
+                        selectedPatient.vitalSignsInformation[
+                          selectedPatient.vitalSignsInformation.length - 1
+                        ].respirationRate
+                      }
+                    </td>
+                  </tr>
+                  <tr>
                     <td>Weight:</td>
-                    <td>{selectedPatient.vitalSignsInformation[selectedPatient.vitalSignsInformation.length - 1].weight}</td>
-                  </tr></>
+                    <td>
+                      {
+                        selectedPatient.vitalSignsInformation[
+                          selectedPatient.vitalSignsInformation.length - 1
+                        ].weight
+                      }
+                    </td>
+                  </tr>
+                </>
               )}
 
-
-
-            <tr className="section-header" onClick={() => toggleSection('health-care-info')}>
-              <th colSpan="2">Health Care Info <button>Show/Hide</button></th>
+            <tr
+              className="section-header"
+              onClick={() => toggleSection("health-care-info")}
+            >
+              <th colSpan="2">
+                Health Care Info <button>Show/Hide</button>
+              </th>
             </tr>
             <tbody id="health-care-info" className="hidden">
               <tr>
@@ -173,8 +208,13 @@ function Dashboard() {
               </tr>
             </tbody>
 
-            <tr className="section-header" onClick={() => toggleSection('emergency-contact')}>
-              <th colSpan="2">Emergency Contact <button>Show/Hide</button></th>
+            <tr
+              className="section-header"
+              onClick={() => toggleSection("emergency-contact")}
+            >
+              <th colSpan="2">
+                Emergency Contact <button>Show/Hide</button>
+              </th>
             </tr>
             <tbody id="emergency-contact" className="hidden">
               <tr>
@@ -189,13 +229,10 @@ function Dashboard() {
                 <td>Contact Number:</td>
                 <td>123-456-7890</td>
               </tr>
-              <tr>
-              </tr>
+              <tr></tr>
             </tbody>
-
           </tbody>
         </table>
-
       </div>
       <div className="table-container">
         <h2>Patients</h2>
@@ -219,16 +256,16 @@ function Dashboard() {
                       onChange={() => handlePatientSelect(patient)}
                     />
                   </td>
-                  <td>{patient.firstName} {patient.lastName}</td>
+                  <td>
+                    {patient.firstName} {patient.lastName}
+                  </td>
                   <td>{patient.type}</td>
                 </tr>
               ))}
           </tbody>
         </Table>
-
       </div>
     </div>
-
   );
 }
 
