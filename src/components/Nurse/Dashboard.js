@@ -1,234 +1,203 @@
 import React, { useState, useEffect } from "react";
-import { Table } from "react-bootstrap";
+import { Form, Table, Row, Col, Container } from "react-bootstrap";
 import "./Dashboard.css";
-import { useAuth } from "../Auth/AuthContext";
-
+import { useQuery } from "@apollo/client";
+import {
+  GET_PATIENT_SIGNS,
+  GET_ALL_USERS,
+  GET_SYMPTOMS_BY_ID,
+} from "../../Utils/graphQLService";
 
 function Dashboard() {
-  const [patients, setPatients] = useState([]);
-  const [selectedPatient, setSelectedPatient] = useState(null);
-  const {userDetails } = useAuth();
-  
-  // Function to toggle visibility of sections
-  const toggleSection = (sectionId) => {
-    const section = document.getElementById(sectionId);
-    section.classList.toggle('hidden');
+  const [selectedPatientId, setSelectedPatientId] = useState("");
+  const [filteredSymptoms, setFilteredSymptoms] = useState([]);
+
+  const {
+    loading: loadingPatients,
+    error: errorPatients,
+    data: dataPatients,
+  } = useQuery(GET_ALL_USERS);
+
+  const handlePatientSelect = (event) => {
+    console.log("New patient ID selected:", event.target.value);
+    setSelectedPatientId(event.target.value);
   };
 
-  const token = localStorage.getItem("token");
-  const graphqlUrl ="http://localhost:4000/graphql/";
+  const {
+    loading: loadingVitals,
+    error: errorVitals,
+    data: dataVitals,
+  } = useQuery(GET_PATIENT_SIGNS, {
+    variables: { id: selectedPatientId },
+    skip: !selectedPatientId,
+  });
+
+  const {
+    loading: loadingSymptoms,
+    error: errorSymptoms,
+    data: dataSymptoms,
+  } = useQuery(GET_SYMPTOMS_BY_ID, {
+    variables: { id: selectedPatientId },
+    skip: !selectedPatientId,
+  });
+
+  useEffect(() => {}, [selectedPatientId]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(graphqlUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization:
-              `Bearer ${token}`,              
-          },
-          body: JSON.stringify({
-            query: `
-              query {
-                users {
-                  _id
-                  firstName
-                  lastName
-                  email
-                  type
-                }
-              }
-            `,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
-        const data = await response.json();
-        setPatients(data.data.users);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  //const handlePatientSelect = (patient) => {
-//    setSelectedPatient(patient);
-  //};
-  const handlePatientSelect = async (patient) => {
-    try {
-      const response = await fetch(graphqlUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization:  `Bearer ${token}`,              
-        },
-        body: JSON.stringify({
-          query: `
-            query GetPatientSigns($_id: String!) {
-              patient(_id: $_id) {
-                _id
-                firstName
-                lastName
-                email
-                type
-                vitalSignsInformation {
-                  bodyTemperature
-                  heartRate
-                  respirationRate
-                  weight
-                  createdAt
-                  updatedAt
-                }
-              }
-            }
-          `,
-          variables: {
-            _id: patient._id,
-          },
-        }),
-      });
-  
-      if (!response.ok) {
-        throw new Error("Failed to fetch patient signs");
-      }
-  
-      const data = await response.json();
-      setSelectedPatient(data.data.patient);
-    } catch (error) {
-      console.error("Error:", error);
+    if (dataSymptoms && dataSymptoms.symptoms) {
+      const symptomsList = dataSymptoms.symptoms
+        .map((symptom) => {
+          return Object.keys(symptom)
+            .filter((key) => symptom[key] === true)
+            .map((key) => ({ name: key, value: symptom[key] }));
+        })
+        .flat();
+      setFilteredSymptoms(symptomsList);
     }
-  };
-  
+  }, [dataSymptoms]);
+
+  if (loadingPatients || loadingVitals || loadingSymptoms) {
+    return <p>Loading...</p>;
+  }
+  if (errorPatients || errorVitals || errorSymptoms) {
+    return (
+      <p>
+        Error loading data:{" "}
+        {errorPatients?.message ||
+          errorVitals?.message ||
+          errorSymptoms?.message}
+      </p>
+    );
+  }
+
   return (
-    <div className="dashboard-container">
-      <div className="table-container">
-
-        <h2>Patient Information</h2>
-        <table border="1">
-        <tr className="section-header">
-              <th colSpan="2"></th>
-            </tr>
-          <tbody id="patient-info">
-            <tr>
-              <td>Id:</td>
-              <td>{selectedPatient ? selectedPatient._id: ""}</td>
-            </tr>            
-            <tr>
-              <td>Name:</td>
-              <td>{selectedPatient ? selectedPatient.firstName + " " + selectedPatient.lastName : ""}</td>
-            </tr>
-            <tr>
-              <td>Email:</td>
-              <td>{selectedPatient ? selectedPatient.email : ""}</td>
-            </tr>
-            <tr>
-            </tr>
-
-            {/* Hidden Sections */}
-            <tr className="section-header" onClick={() => toggleSection("signs")}>
-              <th  colSpan="2">Signs </th>
-            </tr>
-
-            {selectedPatient &&
-                selectedPatient.vitalSignsInformation &&
-                selectedPatient.vitalSignsInformation.length > 0 && (
-                  <><tr>
-                  <td>Body Temperature:</td>
-                  <td>{selectedPatient.vitalSignsInformation[selectedPatient.vitalSignsInformation.length - 1].bodyTemperature}</td>
-                </tr><tr>
-                    <td>Heart Rate:</td>
-                    <td>{selectedPatient.vitalSignsInformation[selectedPatient.vitalSignsInformation.length - 1].heartRate}</td>
-                  </tr><tr>
-                    <td>Respiration Rate:</td>
-                    <td>{selectedPatient.vitalSignsInformation[selectedPatient.vitalSignsInformation.length - 1].respirationRate}</td>
-                  </tr><tr>
-                    <td>Weight:</td>
-                    <td>{selectedPatient.vitalSignsInformation[selectedPatient.vitalSignsInformation.length - 1].weight}</td>
-                  </tr></>
-              )}
-
-
-
-            <tr className="section-header" onClick={() => toggleSection('health-care-info')}>
-              <th colSpan="2">Health Care Info <button>Show/Hide</button></th>
-            </tr>
-            <tbody id="health-care-info" className="hidden">
+    <Container className="form-container">
+      <Row className="mb-3">
+        <Form.Control
+          as="select"
+          value={selectedPatientId}
+          onChange={handlePatientSelect}
+          className="input-field"
+        >
+          <option value="">Select a patient</option>
+          {loadingPatients ? (
+            <option>Loading patients...</option>
+          ) : errorPatients ? (
+            <option>Error loading patients</option>
+          ) : (
+            dataPatients &&
+            dataPatients.users
+              .filter((user) => user.type === "patient")
+              .map((patient) => (
+                <option key={patient._id} value={patient._id}>
+                  {patient.firstName} {patient.lastName}
+                </option>
+              ))
+          )}
+        </Form.Control>
+      </Row>
+      <Row></Row>
+      <Row>
+        <h4>Patient Information</h4>
+      </Row>
+      <Row className="table-container">
+        {dataVitals && dataVitals.patient && (
+          <Col>
+            <Table bordered hover>
+              <tbody>
+                <tr>
+                  <td>ID</td>
+                  <td>{dataVitals.patient._id}</td>
+                </tr>
+                <tr>
+                  <td>Name</td>
+                  <td>
+                    {dataVitals.patient.firstName} {dataVitals.patient.lastName}
+                  </td>
+                </tr>
+                <tr>
+                  <td>Email</td>
+                  <td>{dataVitals.patient.email}</td>
+                </tr>
+              </tbody>
+            </Table>
+          </Col>
+        )}
+      </Row>
+      <Row id="signs">
+        <Col>
+          <h3 className="title">Signs</h3>
+          {dataVitals && dataVitals.patient && (
+            <Table bordered hover>
+              <tbody>
+                <tr>
+                  <td>Body Temperature</td>
+                  <td>
+                    {dataVitals.patient.vitalSignsInformation?.bodyTemperature}
+                  </td>
+                </tr>
+                <tr>
+                  <td>Heart Rate</td>
+                  <td>{dataVitals.patient.vitalSignsInformation?.heartRate}</td>
+                </tr>
+              </tbody>
+            </Table>
+          )}
+        </Col>
+      </Row>
+      <Row id="symptoms">
+        <h3 className="title">Symptoms</h3>
+        <ul>
+          {filteredSymptoms.map((symptom, index) => (
+            <li key={index}>
+              {symptom.name}: {symptom.value.toString()}
+            </li>
+          ))}
+        </ul>
+      </Row>
+      <Row id="health-care-info">
+        <Col>
+          <h3 className="title">Health Care Info</h3>
+          <Table bordered hover>
+            <tbody>
               <tr>
-                <td>Blood Type:</td>
+                <td>Blood Type</td>
                 <td>O+</td>
               </tr>
               <tr>
-                <td>Allergies:</td>
+                <td>Allergies</td>
                 <td>None</td>
               </tr>
               <tr>
-                <td>Medications:</td>
+                <td>Medications</td>
                 <td>Aspirin</td>
               </tr>
             </tbody>
-
-            <tr className="section-header" onClick={() => toggleSection('emergency-contact')}>
-              <th colSpan="2">Emergency Contact <button>Show/Hide</button></th>
-            </tr>
-            <tbody id="emergency-contact" className="hidden">
+          </Table>
+        </Col>
+      </Row>
+      <Row id="emergency-contact">
+        <Col>
+          <h3 className="title">Emergency Contact</h3>
+          <Table bordered hover>
+            <tbody>
               <tr>
-                <td>Name:</td>
+                <td>Name</td>
                 <td>Jane Doe</td>
               </tr>
               <tr>
-                <td>Relation:</td>
+                <td>Relation</td>
                 <td>Spouse</td>
               </tr>
               <tr>
-                <td>Contact Number:</td>
+                <td>Contact Number</td>
                 <td>123-456-7890</td>
               </tr>
-              <tr>
-              </tr>
             </tbody>
-
-          </tbody>
-        </table>
-
-      </div>
-      <div className="table-container">
-        <h2>Patients</h2>
-        <Table bordered hover>
-          <thead>
-            <tr>
-              <th></th>
-              <th>Name</th>
-              <th>Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            {patients
-              .filter((patient) => patient.type === "patient")
-              .map((patient) => (
-                <tr key={patient._id}>
-                  <td>
-                    <input
-                      type="radio"
-                      name="selectedPatient"
-                      onChange={() => handlePatientSelect(patient)}
-                    />
-                  </td>
-                  <td>{patient.firstName} {patient.lastName}</td>
-                  <td>{patient.type}</td>
-                </tr>
-              ))}
-          </tbody>
-        </Table>
-
-      </div>
-    </div>
-
+          </Table>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

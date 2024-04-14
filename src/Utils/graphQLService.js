@@ -39,11 +39,10 @@ export const GET_ALL_USERS = gql`
   query Users {
     users {
       _id
-      username
       email
       firstName
       lastName
-      createdAt
+      type
     }
   }
 `;
@@ -146,6 +145,53 @@ export const ADD_SYMPTOMS_INFORMATION = gql`
       runnyNose
       diarrhea
       contact
+    }
+  }
+`;
+
+export const GET_PATIENT_SIGNS = gql`
+  query GetPatientSigns($id: String!) {
+    patient(_id: $id) {
+      _id
+      email
+      firstName
+      lastName
+      type
+      vitalSignsInformation {
+        bodyTemperature
+        heartRate
+        systolicBloodPressure
+        diastolicBloodPressure
+        respirationRate
+        weight
+      }
+    }
+  }
+`;
+
+export const GET_SYMPTOMS_BY_ID = gql`
+  query GetSymptomsById($id: String!) {
+    patient(_id: $id) {
+      _id
+      email
+      firstName
+      lastName
+      type
+      symptoms {
+        fever
+        tiredness
+        dryCough
+        difficultyInBreathing
+        soreThroat
+        pains
+        nasalCongestion
+        runnyNose
+        diarrhea
+        contact
+        severity
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
