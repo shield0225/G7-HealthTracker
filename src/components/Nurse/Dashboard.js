@@ -19,10 +19,6 @@ function Dashboard() {
   const graphqlUrl ="http://localhost:4000/graphql/";
 
   useEffect(() => {
-
-    console.log("userDetails firstName: "+userDetails?.firstName);
-    console.log("userDetails firstName: "+userDetails?._id);
-
     const fetchData = async () => {
       try {
         const response = await fetch(graphqlUrl, {

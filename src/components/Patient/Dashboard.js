@@ -14,7 +14,6 @@ function Dashboard() {
   useEffect(() => {
     async function fetchData() {
       const user = await fetchUserDetails();
-      console.log({user})
       setVitalSignsInformation(user?.vitalSignsInformation || []);
     }
     fetchData();

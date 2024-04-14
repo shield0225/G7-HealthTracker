@@ -18,6 +18,19 @@ export const GET_USER = gql`
         createdAt
         updatedAt
       }
+      symptoms {
+        fever
+        tiredness
+        dryCough
+        difficultyInBreathing
+        soreThroat
+        pains
+        nasalCongestion
+        runnyNose
+        diarrhea
+        contact
+        severity
+      }
     }
   }
 `;

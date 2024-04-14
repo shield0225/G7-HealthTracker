@@ -1,8 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_USER, ADD_SYMPTOMS_INFORMATION } from "../../Utils/graphQLService";
 import "./InfoArea.css";
 import { Form, Row, Col, Button } from "react-bootstrap";
+
+function getSelectedUserSymtomNames(userSymptoms) {
+  const lastSymtoms = userSymptoms[userSymptoms.length - 1]
+  const symtoms = Object.keys(lastSymtoms);
+  const result = symtoms.filter(symptom => {
+    return lastSymtoms[symptom] === true;
+  })
+  return result;
+}
 
 function Symptoms() {
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
@@ -10,11 +19,18 @@ function Symptoms() {
   const [success, setSuccess] = useState(false);
   const { data: userData } = useQuery(GET_USER);
   const userId = userData?.me?._id;
+  const userSymptoms = userData?.me?.symptoms;
   const [selectedContact, setSelectedContact] = useState("no");
 
   const [addSymptoms, { loading, data, error: mutationError }] = useMutation(
     ADD_SYMPTOMS_INFORMATION
   );
+
+  useEffect(() => {
+    if (!userSymptoms || !userSymptoms.length) return;
+    const selectedUserSymtomNames = getSelectedUserSymtomNames(userSymptoms);
+    setSelectedSymptoms(selectedUserSymtomNames);
+  }, [userSymptoms]);
 
   const symptoms = [
     { displayName: "Fever", schemaKey: "fever" },
@@ -34,13 +50,13 @@ function Symptoms() {
   const handleSymptomClick = (symptom) => {
     setSelectedSymptoms((prevSelectedSymptoms) => {
       const isAlreadySelected = prevSelectedSymptoms.some(
-        (selected) => selected === symptom.displayName
+        (selected) => selected === symptom.schemaKey
       );
       return isAlreadySelected
         ? prevSelectedSymptoms.filter(
-            (displayName) => displayName !== symptom.displayName
+            (schemaKey) => schemaKey !== symptom.schemaKey
           )
-        : [...prevSelectedSymptoms, symptom.displayName];
+        : [...prevSelectedSymptoms, symptom.schemaKey];
     });
   };
 
@@ -53,11 +69,9 @@ function Symptoms() {
     }
 
     const symptomsPayload = symptoms.reduce((acc, symptom) => {
-      acc[symptom.schemaKey] = selectedSymptoms.includes(symptom.displayName);
+      acc[symptom.schemaKey] = selectedSymptoms.includes(symptom.schemaKey);
       return acc;
     }, {});
-
-    console.log("Symptoms Payload:", symptomsPayload);
 
     try {
       const response = await addSymptoms({
@@ -67,7 +81,6 @@ function Symptoms() {
           contact: selectedContact,
         },
       });
-      console.log("Submission successful, server response:", response);
       setSuccess(true);
       setError(null);
       setSelectedSymptoms([]); // Optionally clear selected symptoms after successful submission
@@ -89,7 +102,7 @@ function Symptoms() {
                 md={4}
                 key={symptom.schemaKey}
                 className={`symptom-card ${
-                  selectedSymptoms.includes(symptom.displayName)
+                  selectedSymptoms.includes(symptom.schemaKey)
                     ? "selected"
                     : ""
                 }`}
