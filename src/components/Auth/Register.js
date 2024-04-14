@@ -39,13 +39,9 @@ function Register() {
     e.preventDefault();
     const validationErrors = validateRegistration(formData);
     setErrors(validationErrors);
-    console.log(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
       signup({ variables: formData })
         .then((data) => {
-          // Signup successful
-          console.log("Signup successful", data);
-          console.log("token", data.signup.token);
           setFormData(initialState);
         })
         .catch((error) => {
@@ -53,7 +49,6 @@ function Register() {
           const message =
             error.graphQLErrors?.[0]?.message ||
             "An unexpected error occurred.";
-          console.log("Signup unsuccessful", error);
           setErrors({ ...errors, signup: message });
         });
     }

@@ -43,7 +43,6 @@ function Login() {
     e.preventDefault();
     const validationErrors = validateLogin(formData);
     setErrors(validationErrors);
-    console.log(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
       await login(formData);
     }
