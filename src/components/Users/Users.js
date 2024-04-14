@@ -9,7 +9,6 @@ function Users() {
   if (loading) {
     return (
       <Spinner animation="border" role="status">
-        {/* Use visually hidden component or equivalent for screen reader text */}
         <span className="visually-hidden">Loading...</span>
       </Spinner>
     );
@@ -22,11 +21,13 @@ function Users() {
     <Container>
       <h2>All Users:</h2>
       <ListGroup>
-        {data.users.map((user) => (
-          <ListGroup.Item key={user._id}>
-            {user.username} - {user.email}
-          </ListGroup.Item>
-        ))}
+        {data &&
+          data.users &&
+          data.users.map((user) => (
+            <ListGroup.Item key={user._id}>
+              {user.username} - {user.email}
+            </ListGroup.Item>
+          ))}
       </ListGroup>
     </Container>
   );

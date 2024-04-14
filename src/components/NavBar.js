@@ -52,14 +52,14 @@ function NavBar({ onLoginClick, onRegisterClick }) {
               {/* User-specific dropdown */}
               <Dropdown as={Nav.Item} align="end" className="nav-item">
                 <Dropdown.Toggle as={Nav.Link}>
-                  Welcome,
+                  Welcome,{" "}
                   <strong>{`${userDetails?.firstName} ${userDetails?.lastName}`}</strong>
                 </Dropdown.Toggle>
-                <Dropdown.Menu>
+                <Dropdown.Menu className="nav-item">
                   <Dropdown.Item
                     eventKey="logout"
                     onClick={logout}
-                    className="nav-item"
+                    className="nav-item-logout"
                     align="end"
                   >
                     Log out
