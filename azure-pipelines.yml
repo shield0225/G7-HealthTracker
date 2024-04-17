@@ -36,7 +36,5 @@ steps:
   displayName: 'npm install and build'
   
 - script: |
-    echo "SonarQube Analysis"
-    # SonarQube analysis step, uncomment to enable
     sonar-scanner
     displayName: 'SonarQube Analysis'
