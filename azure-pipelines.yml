@@ -10,7 +10,7 @@ variables:
   - group: PAT
 
 pool:
-  vmImage: ubuntu-latest
+  name: COMP367-Windows
 
 steps:
 - script: |
