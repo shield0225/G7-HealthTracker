@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- main
+  - dev
 
 variables:
   - group: PAT
@@ -34,20 +34,18 @@ steps:
     npm install
     npm run build
   displayName: 'npm install and build'
-  
+
 - task: SonarQubePrepare@5
   inputs:
     SonarQube: 'SonarQube'
-    scannerMode: 'CLI'
-    configMode: 'manual'
-    cliProjectKey: 'DevOps-Implementation-FrontEnd_DevOps-Implementation-FrontEnd_AY7q4Jspm1gF9zcubyaa'
-    cliProjectName: 'sonar.comp367'
-    cliSources: '.'
-    
+    scannerMode: 'Other'
+    extraProperties: |
+      sonar.projectKey=DevOps-Implementation-FrontEnd_DevOps-Implementation-FrontEnd_b070fab6-e6fd-485f-879c-646018c07ae6
+      sonar.projectName=DevOps-Implementation-FrontEnd
+
 - task: SonarQubeAnalyze@5
   inputs:
     jdkversion: 'JAVA_HOME_17_X64'
-
 
 - task: SonarQubePublish@5
   inputs:
