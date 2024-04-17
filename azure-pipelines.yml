@@ -24,11 +24,6 @@ stages:
             versionSpec: '20.12.2'
           displayName: 'Install Node.js'
 
-        - script: |
-            if not exist "$(Build.SourcesDirectory)\node_modules" mkdir "$(Build.SourcesDirectory)\node_modules"
-          displayName: 'Ensure node_modules directory exists'
-          condition: succeeded()
-
         - task: Cache@2
           inputs:
             key: 'npm | "$(Agent.OS)" | package-lock.json'
