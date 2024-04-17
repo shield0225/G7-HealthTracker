@@ -35,6 +35,7 @@ steps:
     npm run build
   displayName: 'npm install and build'
   
-- script: |
-    sonar-scanner
-    displayName: 'SonarQube Analysis'
+- task: SonarQubeAnalyze@5
+  inputs:
+    jdkversion: 'JAVA_HOME_17_X64'
+
