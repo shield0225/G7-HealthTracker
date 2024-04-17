@@ -17,7 +17,7 @@ stages:
         - script: |
             echo "Using PAT stored"
             git clone https://shield0225:$(myGitHubPAT)@github.com/shield0225/G7-HealthTracker
-          displayName: 'Clone private repository'
+          displayName: 'Clone repository'
 
         - task: NodeTool@0
           inputs:
