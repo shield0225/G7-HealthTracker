@@ -50,8 +50,8 @@ stages:
   - stage: Analyze
     displayName: 'Code Analysis Stage'
     jobs:
-      - job: SonarQubeAnalysis
-        displayName: 'SonarQube Analysis'
+      - job: SonarCloudAnalysis
+        displayName: 'SonarCloud Analysis'
         steps:
 
         - task: SonarCloudPrepare@1
@@ -62,15 +62,13 @@ stages:
             projectKey: 'shield0225_G7-HealthTracker'
             projectName: 'shield0225'
 
-        - task: SonarQubeAnalyze@5
+        - task: SonarCloudAnalyze@1
           inputs:
             jdkversion: 'JAVA_HOME_17_X64'
 
-        - task: SonarQubePublish@5
+        - task: SonarCloudPublish@1
           inputs:
             pollingTimeoutSec: '300'
-          env:
-            SYSTEM_DEBUG: true
 
   - stage: Publish
     displayName: 'Publish Artifacts'
