@@ -24,6 +24,10 @@ stages:
             versionSpec: '20.12.2'
           displayName: 'Install Node.js'
 
+        - script: |
+            mkdir -p $(Build.SourcesDirectory)/node_modules
+          displayName: 'Ensure node_modules directory exists'
+
         - task: Cache@2
           inputs:
             key: 'npm | "$(Agent.OS)" | package-lock.json'
