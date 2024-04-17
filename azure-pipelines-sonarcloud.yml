@@ -64,6 +64,7 @@ stages:
             SonarCloud: 'SonarCloud'
             organization: 'shield0225'
             scannerMode: 'CLI'
+            projectKey: 'shield0225_G7-HealthTracker'
             configMode: 'file'
 
         - task: SonarCloudAnalyze@1
