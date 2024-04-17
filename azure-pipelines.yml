@@ -35,6 +35,12 @@ steps:
     npm run build
   displayName: 'npm install and build'
   
+- task: SonarQubePrepare@5
+  inputs:
+    SonarQube: 'SonarQube'
+    scannerMode: 'CLI'
+    configMode: 'file'
+    
 - task: SonarQubeAnalyze@5
   inputs:
     jdkversion: 'JAVA_HOME_17_X64'
