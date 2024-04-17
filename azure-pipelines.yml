@@ -1,0 +1,53 @@
+# Node.js with React
+# Build a Node.js project that uses React.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+  - dev
+
+variables:
+  - group: PAT
+
+pool:
+  name: COMP367-Windows
+
+steps:
+- script: |
+    echo "Using PAT stored"
+    git clone https://shield0225:$(myGitHubPAT)@github.com/shield0225/G7-HealthTracker
+  displayName: 'Clone private repository'
+
+- task: NodeTool@0
+  inputs:
+    versionSpec: '20.12.2'
+  displayName: 'Install Node.js'
+
+- task: Cache@2
+  inputs:
+    key: 'npm | "$(Agent.OS)" | package-lock.json'
+    restoreKeys: 'npm | "$(Agent.OS)"'
+    path: $(Build.SourcesDirectory)/node_modules
+  displayName: 'Cache node_modules'
+
+- script: |
+    npm install
+    npm run build
+  displayName: 'npm install and build'
+
+- task: SonarQubePrepare@5
+  inputs:
+    SonarQube: 'SonarQube'
+    scannerMode: 'Other'
+    extraProperties: |
+      sonar.projectKey=DevOps-Implementation-FrontEnd_DevOps-Implementation-FrontEnd_b070fab6-e6fd-485f-879c-646018c07ae6
+      sonar.projectName=DevOps-Implementation-FrontEnd
+
+- task: SonarQubeAnalyze@5
+  inputs:
+    jdkversion: 'JAVA_HOME_17_X64'
+
+- task: SonarQubePublish@5
+  inputs:
+    pollingTimeoutSec: '300'
+
