@@ -1,9 +1,6 @@
 trigger:
   - main
 
-variables:
-  - group: PAT
-
 pool:
   name: COMP367-Windows
 
