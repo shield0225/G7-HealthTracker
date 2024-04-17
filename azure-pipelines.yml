@@ -34,9 +34,16 @@ stages:
         displayName: 'Build Application'
         steps:
         - script: |
+            echo "Installing dependencies..."
             npm install
+            echo "Compiling application using build tool (npm)..."
             npm run build
-          displayName: 'Install Dependencies and Build'
+          displayName: 'Compile Project'
+
+        - script: |
+            echo "Running unit tests and generating code coverage report..."
+            npm run test --coverage
+          displayName: 'Unit Tests and Code Coverage'
 
   - stage: Analyze
     displayName: 'Code Analysis Stage'
