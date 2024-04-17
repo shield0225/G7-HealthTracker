@@ -32,8 +32,10 @@ steps:
 
 - script: |
     npm install
+    npm run lint
+    npm test
     npm run build
-  displayName: 'npm install and build'
+  displayName: 'Install, Lint, Test, and Build'
 
 - task: SonarQubePrepare@5
   inputs:
@@ -42,6 +44,11 @@ steps:
     extraProperties: |
       sonar.projectKey=DevOps-Implementation-FrontEnd_DevOps-Implementation-FrontEnd_b070fab6-e6fd-485f-879c-646018c07ae6
       sonar.projectName=DevOps-Implementation-FrontEnd
+      sonar.sources=src
+      sonar.exclusions=**/*.test.js,**/node_modules/**
+      sonar.tests=src
+      sonar.test.inclusions=**/*.test.js
+      sonar.javascript.lcov.reportPaths=coverage/lcov.info
 
 - task: SonarQubeAnalyze@5
   inputs:
@@ -51,3 +58,8 @@ steps:
   inputs:
     pollingTimeoutSec: '300'
 
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)/build'
+    ArtifactName: 'build'
+    publishLocation: 'Container'
