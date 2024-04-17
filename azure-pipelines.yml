@@ -15,7 +15,7 @@ pool:
 steps:
 - script: |
     echo "Using PAT stored"
-    git clone https://shield0225:$(myGitHubPAT)@github.com/G7-HealthTracker
+    git clone https://shield0225:$(myGitHubPAT)@github.com/shield0225/G7-HealthTracker
   displayName: 'Clone private repository'
 
 - task: NodeTool@0
