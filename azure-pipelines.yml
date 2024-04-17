@@ -14,10 +14,9 @@ stages:
       - job: CheckoutAndSetup
         displayName: 'Checkout and Setup Environment'
         steps:
-        - script: |
-            echo "Using PAT stored"
-            git clone https://shield0225:$(myGitHubPAT)@github.com/shield0225/G7-HealthTracker
-          displayName: 'Clone repository'
+        
+        - checkout: self
+          displayName: 'Checkout Repository'
 
         - task: NodeTool@0
           inputs:
