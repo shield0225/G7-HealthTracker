@@ -56,11 +56,11 @@ stages:
 
         - task: SonarQubePrepare@5
           inputs:
-            SonarQube: 'SonarQube'
+            SonarQube: 'SonarQube-community'
             scannerMode: 'CLI'
             configMode: 'file'
             extraProperties: |
-              sonar.projectKey=DevOps-Implementation-FrontEnd_DevOps-Implementation-FrontEnd_b070fab6-e6fd-485f-879c-646018c07ae6
+              sonar.projectKey=DevOps-Implementation-FrontEnd_DevOps-Implementation-FrontEnd_AY7txngeWlcBlrPjn8OG
 
         - task: SonarQubeAnalyze@5
           inputs:
