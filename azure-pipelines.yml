@@ -39,9 +39,16 @@ steps:
   inputs:
     SonarQube: 'SonarQube'
     scannerMode: 'CLI'
-    configMode: 'file'
+    configMode: 'manual'
+    cliProjectKey: 'DevOps-Implementation-FrontEnd_DevOps-Implementation-FrontEnd_AY7q4Jspm1gF9zcubyaa'
+    cliProjectName: 'sonar.comp367'
+    cliSources: '.'
     
 - task: SonarQubeAnalyze@5
   inputs:
     jdkversion: 'JAVA_HOME_17_X64'
+
+- task: SonarQubePublish@5
+  inputs:
+    pollingTimeoutSec: '300'
 
