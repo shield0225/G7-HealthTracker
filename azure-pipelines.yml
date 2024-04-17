@@ -60,7 +60,7 @@ stages:
             scannerMode: 'CLI'
             configMode: 'file'
             extraProperties: |
-              sonar.projectKey=DevOps-Implementation-FrontEnd_DevOps-Implementation-FrontEnd_AY7t5ShtWlcBlrPjn8Oa
+              sonar.projectKey=DevOps-Implementation-FrontEnd
 
         - task: SonarQubeAnalyze@5
           inputs:
