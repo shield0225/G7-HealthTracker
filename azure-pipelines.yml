@@ -6,10 +6,18 @@
 trigger:
 - main
 
+variables:
+  - group: PAT
+
 pool:
   vmImage: ubuntu-latest
 
 steps:
+- script: |
+    echo "Using PAT stored"
+    git clone https://shield0225:$(myGitHubPAT)@github.com/G7-HealthTracker
+  displayName: 'Clone private repository'
+
 - task: NodeTool@0
   inputs:
     versionSpec: '10.x'
