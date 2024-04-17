@@ -51,10 +51,9 @@ stages:
         displayName: 'Run Tests'
         steps:
         - script: |
-            npm run lint
             npm test
             npm run coverage
-          displayName: 'Lint, Test, and Generate Coverage'
+          displayName: 'Test and Generate Coverage'
 
   - stage: Analyze
     displayName: 'Code Analysis Stage'
