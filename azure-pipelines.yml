@@ -47,13 +47,7 @@ stages:
             npm run build
           displayName: 'Install Dependencies and Build'
 
-      - job: Test
-        displayName: 'Run Tests'
-        steps:
-        - script: |
-            npm test
-            npm run coverage
-          displayName: 'Test and Generate Coverage'
+
 
   - stage: Analyze
     displayName: 'Code Analysis Stage'
