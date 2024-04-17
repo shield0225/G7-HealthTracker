@@ -23,7 +23,6 @@ stages:
           displayName: 'Install Node.js'
           inputs:
             versionSpec: '20.12.2'
-          
 
         - script: |
             if not exist "$(Build.SourcesDirectory)\node_modules" mkdir "$(Build.SourcesDirectory)\node_modules"
@@ -36,7 +35,6 @@ stages:
             key: 'npm | "$(Agent.OS)" | package-lock.json'
             restoreKeys: 'npm | "$(Agent.OS)"'
             path: $(Build.SourcesDirectory)/node_modules
-          
 
   - stage: BuildAndTest
     displayName: 'Build and Test Stage'
@@ -63,19 +61,16 @@ stages:
             scannerMode: 'CLI'
             projectKey: 'shield0225_G7-HealthTracker'
             projectName: 'shield0225'
-          
 
         - task: SonarCloudAnalyze@1
           displayName: 'Run SonarCloud Analysis'
           inputs:
             jdkversion: 'JAVA_HOME_17_X64'
-          
 
         - task: SonarCloudPublish@1
           displayName: 'Publish Quality Gate Result'
           inputs:
             pollingTimeoutSec: '300'
-
 
   - stage: Publish
     displayName: 'Publish Artifacts'
