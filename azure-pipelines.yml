@@ -69,8 +69,6 @@ stages:
         - task: SonarQubePublish@5
           inputs:
             pollingTimeoutSec: '300'
-          env:
-            SYSTEM_DEBUG: true
 
   - stage: Publish
     displayName: 'Publish Artifacts'
@@ -80,6 +78,6 @@ stages:
         steps:
         - task: PublishBuildArtifacts@1
           inputs:
-            PathtoPublish: '$(Build.SourcesDirectory)/build'
-            ArtifactName: 'build'
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+            ArtifactName: 'drop'
             publishLocation: 'Container'
