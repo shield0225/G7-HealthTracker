@@ -20,9 +20,10 @@ stages:
           displayName: 'Clone private repository'
 
         - task: NodeTool@0
+          displayName: 'Install Node.js'
           inputs:
             versionSpec: '20.12.2'
-          displayName: 'Install Node.js'
+          
 
         - script: |
             if not exist "$(Build.SourcesDirectory)\node_modules" mkdir "$(Build.SourcesDirectory)\node_modules"
@@ -30,22 +31,22 @@ stages:
           condition: succeeded()
 
         - task: Cache@2
+          displayName: 'Cache node_modules'
           inputs:
             key: 'npm | "$(Agent.OS)" | package-lock.json'
             restoreKeys: 'npm | "$(Agent.OS)"'
             path: $(Build.SourcesDirectory)/node_modules
-          displayName: 'Cache node_modules'
+          
 
   - stage: BuildAndTest
     displayName: 'Build and Test Stage'
     jobs:
       - job: Build
-        displayName: 'Build Application'
+        displayName: 'Install Dependencies and Build'
         steps:
         - script: |
             npm install
             npm run build
-          displayName: 'Install Dependencies and Build'
 
   - stage: Analyze
     displayName: 'Code Analysis Stage'
@@ -55,20 +56,26 @@ stages:
         steps:
 
         - task: SonarCloudPrepare@1
+          displayName: 'Prepare SonarCloud Analysis'
           inputs:
             SonarCloud: 'SonarCloud'
             organization: 'shield0225'
             scannerMode: 'CLI'
             projectKey: 'shield0225_G7-HealthTracker'
             projectName: 'shield0225'
+          
 
         - task: SonarCloudAnalyze@1
+          displayName: 'Run SonarCloud Analysis'
           inputs:
             jdkversion: 'JAVA_HOME_17_X64'
+          
 
         - task: SonarCloudPublish@1
+          displayName: 'Publish Quality Gate Result'
           inputs:
             pollingTimeoutSec: '300'
+
 
   - stage: Publish
     displayName: 'Publish Artifacts'
