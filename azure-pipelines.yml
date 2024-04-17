@@ -54,13 +54,18 @@ stages:
         displayName: 'SonarQube Analysis'
         steps:
 
-        - task: SonarCloudPrepare@1
+        - task: SonarQubePrepare@5
           inputs:
-            SonarCloud: 'SonarCloud'
-            organization: 'shield0225'
-            scannerMode: 'CLI'
-            projectKey: 'shield0225_G7-HealthTracker'
-            projectName: 'shield0225'
+            SonarQube: 'SonarQube'
+            scannerMode: 'Other'
+            extraProperties: |
+              sonar.projectKey=DevOps-Implementation-FrontEnd_DevOps-Implementation-FrontEnd_b070fab6-e6fd-485f-879c-646018c07ae6
+              sonar.projectName=DevOps-Implementation-FrontEnd
+              sonar.sources=src
+              sonar.exclusions=**/*.test.js,**/node_modules/**
+              sonar.tests=src
+              sonar.test.inclusions=**/*.test.js
+              sonar.javascript.lcov.reportPaths=coverage/lcov.info
 
         - task: SonarQubeAnalyze@5
           inputs:
