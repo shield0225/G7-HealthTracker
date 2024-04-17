@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-  - dev
+  - main
 
 variables:
   - group: PAT
@@ -27,7 +27,7 @@ stages:
         - task: NodeTool@0
           displayName: 'Install Node.js'
           inputs:
-            versionSpec: '20.12.2'
+            versionSpec: '16.14.0'
 
         - script: |
             if not exist "$(Build.SourcesDirectory)\node_modules" mkdir "$(Build.SourcesDirectory)\node_modules"
@@ -64,8 +64,7 @@ stages:
             SonarCloud: 'SonarCloud'
             organization: 'shield0225'
             scannerMode: 'CLI'
-            projectKey: 'shield0225_G7-HealthTracker'
-            projectName: 'shield0225'
+            configMode: 'file'
 
         - task: SonarCloudAnalyze@1
           displayName: 'Run SonarCloud Analysis'
