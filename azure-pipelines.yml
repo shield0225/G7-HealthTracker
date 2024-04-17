@@ -23,7 +23,14 @@ steps:
     versionSpec: '20.12.2'
   displayName: 'Install Node.js'
 
+- task: Cache@2
+  inputs:
+    key: 'npm | "$(Agent.OS)" | package-lock.json'
+    restoreKeys: 'npm | "$(Agent.OS)"'
+    path: $(Build.SourcesDirectory)/node_modules
+  displayName: 'Cache node_modules'
+
 - script: |
-    npm install
+    npm ci
     npm run build
   displayName: 'npm install and build'
