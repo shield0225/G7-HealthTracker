@@ -47,8 +47,6 @@ stages:
             npm run build
           displayName: 'Install Dependencies and Build'
 
-
-
   - stage: Analyze
     displayName: 'Code Analysis Stage'
     jobs:
@@ -56,12 +54,13 @@ stages:
         displayName: 'SonarQube Analysis'
         steps:
 
-        - task: SonarQubePrepare@5
+        - task: SonarCloudPrepare@1
           inputs:
-            SonarQube: 'SonarQube-cloud'
+            SonarCloud: 'SonarCloud'
+            organization: 'shield0225'
             scannerMode: 'CLI'
             projectKey: 'shield0225_G7-HealthTracker'
-            projectName: 'G7-HealthTracker'
+            projectName: 'shield0225'
 
         - task: SonarQubeAnalyze@5
           inputs:
