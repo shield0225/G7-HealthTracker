@@ -25,8 +25,9 @@ stages:
           displayName: 'Install Node.js'
 
         - script: |
-            mkdir -p $(Build.SourcesDirectory)/node_modules
+            if not exist "$(Build.SourcesDirectory)\node_modules" mkdir "$(Build.SourcesDirectory)\node_modules"
           displayName: 'Ensure node_modules directory exists'
+          condition: succeeded()
 
         - task: Cache@2
           inputs:
