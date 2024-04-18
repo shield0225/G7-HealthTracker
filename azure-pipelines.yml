@@ -47,6 +47,13 @@ stages:
             npm run test --coverage
           displayName: 'Unit Tests and Code Coverage'
           continueOnError: true
+        
+        - task: PublishCodeCoverageResults@1
+          inputs:
+            codeCoverageTool: 'Cobertura'
+            summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.cobertura.xml'
+            reportDirectory: '$(System.DefaultWorkingDirectory)/coverage-reports'
+            additionalCodeCoverageFiles: '$(System.DefaultWorkingDirectory)/**/coverage.*.xml'  
 
   - stage: DeliverArtifact
     displayName: 'Deliver Artifact'
