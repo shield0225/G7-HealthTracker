@@ -44,7 +44,7 @@ stages:
         
         - script: |
             echo "Running unit tests and generating code coverage report..."
-            npm run test --coverage
+            npm run test:coverage
           displayName: 'Unit Tests and Code Coverage'
           continueOnError: true    
 
@@ -122,13 +122,6 @@ stages:
       - deployment: DeployQATJob
         displayName: 'Deployment to QAT'
         environment: 'qat'
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - script: |
-                    echo "Deploying to QAT Server..."
-                  displayName: 'Deploy to QAT'
 
   - stage: DeployStaging
     displayName: 'Deploy to Staging Environment'
@@ -136,13 +129,6 @@ stages:
       - deployment: DeployStagingJob
         displayName: 'Deployment to Staging'
         environment: 'staging'
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - script: |
-                    echo "Deploying to Staging Server..."
-                  displayName: 'Deploy to Staging'
 
   - stage: DeployProd
     displayName: 'Deploy to Prod Environment'
