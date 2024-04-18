@@ -46,8 +46,8 @@ stages:
             echo "Running unit tests and generating code coverage report..."
             npm run test --coverage
           displayName: 'Unit Tests and Code Coverage'
-          continueOnError: true
-        
+          continueOnError: true    
+
         - task: PublishCodeCoverageResults@1
           inputs:
             codeCoverageTool: 'Cobertura'
@@ -108,7 +108,7 @@ stages:
                 - download: current
                   artifact: node-app
                 - task: AzureWebApp@1
-                  displayName: 'Deploy to Azure Web App'
+                  displayName: 'Deploy to Azure Web App - dev'
                   inputs:
                     appType: webApp
                     azureSubscription: 'AzureSubscription'  
@@ -128,7 +128,6 @@ stages:
               steps:
                 - script: |
                     echo "Deploying to QAT Server..."
-                    # Mock deployment commands
                   displayName: 'Deploy to QAT'
 
   - stage: DeployStaging
@@ -143,20 +142,27 @@ stages:
               steps:
                 - script: |
                     echo "Deploying to Staging Server..."
-                    # Mock deployment commands
                   displayName: 'Deploy to Staging'
 
   - stage: DeployProd
-    displayName: 'Deploy to Production Environment'
+    displayName: 'Deploy to Prod Environment'
+    dependsOn: DeliverArtifact
+    condition: succeeded()
     jobs:
       - deployment: DeployProdJob
-        displayName: 'Deployment to Production'
+        displayName: 'Deployment to Prod'
         environment: 'production'
         strategy:
           runOnce:
             deploy:
               steps:
-                - script: |
-                    echo "Deploying to Production Server..."
-                    # Mock deployment commands
-                  displayName: 'Deploy to Production'
+                - download: current
+                  artifact: node-app
+                - task: AzureWebApp@1
+                  displayName: 'Deploy to Azure Web App - prod'
+                  inputs:
+                    appType: webApp
+                    azureSubscription: 'AzureSubscription'  
+                    appName: 'DevOps-HealthTracker-Prod'
+                    slotName: 'dev'
+                    package: '$(Pipeline.Workspace)/node-app'
