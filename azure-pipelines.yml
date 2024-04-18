@@ -126,7 +126,6 @@ stages:
               steps:
                 - script: |
                     echo "Deploying to QAT Server..."
-                    # Mock deployment commands
                   displayName: 'Deploy to QAT'
 
   - stage: DeployStaging
@@ -143,7 +142,6 @@ stages:
               steps:
                 - script: |
                     echo "Deploying to Staging Server..."
-                    # Mock deployment commands
                   displayName: 'Deploy to Staging'
 
   - stage: DeployProd
