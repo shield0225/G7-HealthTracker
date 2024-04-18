@@ -102,7 +102,7 @@ stages:
             deploy:
               steps:
                 - download: current
-                  artifact: node-app
+                  artifact: node_app
                 - task: AzureWebApp@1
                   displayName: 'Deploy to Azure Web App'
                   inputs:
@@ -110,7 +110,7 @@ stages:
                     azureSubscription: 'AzureSubscription'  
                     appName: 'DevOps-HealthTracker-Dev'
                     slotName: 'dev'
-                    package: $(Pipeline.Workspace)/node-app  
+                    package: $(Pipeline.Workspace)/node_app 
 
   - stage: DeployQAT
     displayName: 'Deploy to QAT Environment'
@@ -158,7 +158,14 @@ stages:
           runOnce:
             deploy:
               steps:
-                - script: |
-                    echo "Deploying to Production Server..."
-                    # Mock deployment commands
-                  displayName: 'Deploy to Production'
+                - download: current
+                  artifact: node_app
+                - task: AzureWebApp@1
+                  displayName: 'Deploy to Azure Web App'
+                  inputs:
+                    appType: webApp
+                    azureSubscription: 'AzureSubscription'  
+                    appName: 'DevOps-HealthTracker-Prod'
+                    slotName: 'production'
+                    package: $(Pipeline.Workspace)/node_app 
+
