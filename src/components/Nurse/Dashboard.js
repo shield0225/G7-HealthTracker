@@ -14,7 +14,8 @@ function Dashboard() {
   };
 
   const token = localStorage.getItem("token");
-  const graphqlUrl = "https://comp308-group7.onrender.com/graphql";
+  const graphqlUrl =
+    "https://healthtracker-backend-2ece78b712eb.herokuapp.com/graphql";
 
   useEffect(() => {
     const fetchData = async () => {

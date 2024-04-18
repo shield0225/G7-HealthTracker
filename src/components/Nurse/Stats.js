@@ -26,7 +26,7 @@ function Stats() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://comp308-group7.onrender.com/graphql",
+          "https://healthtracker-backend-2ece78b712eb.herokuapp.com/graphql",
           {
             method: "POST",
             headers: {
@@ -81,7 +81,8 @@ function Stats() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const graphqlUrl = "https://comp308-group7.onrender.com/graphql";
+    const graphqlUrl =
+      "https://healthtracker-backend-2ece78b712eb.herokuapp.com/graphql";
     const mutation = `
         mutation {
           addVitalsInformation(
