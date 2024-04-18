@@ -48,6 +48,8 @@ stages:
 
   - stage: DeliverArtifact
     displayName: 'Deliver Artifact'
+    dependsOn: BuildAndTest
+    condition: succeeded()
     jobs:
       - job: PublishArtifact
         displayName: 'Publish Artifact'
@@ -84,7 +86,7 @@ stages:
 
   - stage: DeployDev
     displayName: 'Deploy to Dev Environment'
-    dependsOn: BuildAndTest
+    dependsOn: DeliverArtifact
     condition: succeeded()
     jobs:
       - deployment: DeployDevJob
