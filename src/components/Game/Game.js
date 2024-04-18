@@ -5,12 +5,12 @@ import NavBar from "../NavBar";
 import Footer from "../Footer";
 
 function Game() {
-    const { unityProvider, loadingProgression, isLoaded } = useUnityContext({
-        loaderUrl: "build/KeepMovingBuild.loader.js",
-        dataUrl: "build/KeepMovingBuild.data",
-        frameworkUrl: "build/KeepMovingBuild.framework.js",
-        codeUrl: "build/KeepMovingBuild.wasm"
-    });
+  const { unityProvider, loadingProgression, isLoaded } = useUnityContext({
+    loaderUrl: "build/KeepMovingBuild.loader.js",
+    dataUrl: "build/KeepMovingBuild.data",
+    frameworkUrl: "build/KeepMovingBuild.framework.js",
+    codeUrl: "build/KeepMovingBuild.wasm",
+  });
 
     return (
         <Container>
@@ -30,6 +30,5 @@ function Game() {
             <Footer />
         </Container>
     )
-}
 
 export default Game;
