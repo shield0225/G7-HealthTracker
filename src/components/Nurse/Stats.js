@@ -25,14 +25,16 @@ function Stats() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:4000/graphql/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            query: `
+        const response = await fetch(
+          "https://comp308-group7.onrender.com/graphql",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              query: `
                 query {
                   users {
                     _id
@@ -43,8 +45,9 @@ function Stats() {
                   }
                 }
               `,
-          }),
-        });
+            }),
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -78,7 +81,7 @@ function Stats() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const graphqlUrl = "http://localhost:4000/graphql/";
+    const graphqlUrl = "https://comp308-group7.onrender.com/graphql";
     const mutation = `
         mutation {
           addVitalsInformation(

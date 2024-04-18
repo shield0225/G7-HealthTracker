@@ -14,7 +14,7 @@ function Dashboard() {
   };
 
   const token = localStorage.getItem("token");
-  const graphqlUrl = "http://localhost:4000/graphql/";
+  const graphqlUrl = "https://comp308-group7.onrender.com/graphql";
 
   useEffect(() => {
     const fetchData = async () => {
