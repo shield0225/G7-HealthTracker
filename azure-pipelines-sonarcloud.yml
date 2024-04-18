@@ -14,77 +14,76 @@ pool:
 
 stages:
   - stage: Prepare
-    displayName: 'Preparation Stage'
+    displayName: "Preparation Stage"
     jobs:
       - job: CheckoutAndSetup
-        displayName: 'Checkout and Setup Environment'
+        displayName: "Checkout and Setup Environment"
         steps:
-        - script: |
-            echo "Using PAT stored"
-            git clone https://shield0225:$(myGitHubPAT)@github.com/shield0225/G7-HealthTracker
-          displayName: 'Clone private repository'
+          - script: |
+              echo "Using PAT stored"
+              git clone https://shield0225:$(myGitHubPAT)@github.com/shield0225/G7-HealthTracker
+            displayName: "Clone private repository"
 
-        - task: NodeTool@0
-          displayName: 'Install Node.js'
-          inputs:
-            versionSpec: '16.14.0'
+          - task: NodeTool@0
+            displayName: "Install Node.js"
+            inputs:
+              versionSpec: "16.14.0"
 
-        - script: |
-            if not exist "$(Build.SourcesDirectory)\node_modules" mkdir "$(Build.SourcesDirectory)\node_modules"
-          displayName: 'Ensure node_modules directory exists'
-          condition: succeeded()
+          - script: |
+              if not exist "$(Build.SourcesDirectory)\node_modules" mkdir "$(Build.SourcesDirectory)\node_modules"
+            displayName: "Ensure node_modules directory exists"
+            condition: succeeded()
 
-        - task: Cache@2
-          displayName: 'Cache node_modules'
-          inputs:
-            key: 'npm | "$(Agent.OS)" | package-lock.json'
-            restoreKeys: 'npm | "$(Agent.OS)"'
-            path: $(Build.SourcesDirectory)/node_modules
+          - task: Cache@2
+            displayName: "Cache node_modules"
+            inputs:
+              key: 'npm | "$(Agent.OS)" | package-lock.json'
+              restoreKeys: 'npm | "$(Agent.OS)"'
+              path: $(Build.SourcesDirectory)/node_modules
 
   - stage: BuildAndTest
-    displayName: 'Build and Test Stage'
+    displayName: "Build and Test Stage"
     jobs:
       - job: Build
-        displayName: 'Install Dependencies and Build'
+        displayName: "Install Dependencies and Build"
         steps:
-        - script: |
-            npm install
-            npm run build
+          - script: |
+              npm install
+              npm run build
 
   - stage: Analyze
-    displayName: 'Code Analysis Stage'
+    displayName: "Code Analysis Stage"
     jobs:
       - job: SonarCloudAnalysis
-        displayName: 'SonarCloud Analysis'
+        displayName: "SonarCloud Analysis"
         steps:
+          - task: SonarCloudPrepare@1
+            displayName: "Prepare SonarCloud Analysis"
+            inputs:
+              SonarCloud: "SonarCloud"
+              organization: "shield0225"
+              scannerMode: "CLI"
+              projectKey: "shield0225_G7-HealthTracker"
+              configMode: "file"
 
-        - task: SonarCloudPrepare@1
-          displayName: 'Prepare SonarCloud Analysis'
-          inputs:
-            SonarCloud: 'SonarCloud'
-            organization: 'shield0225'
-            scannerMode: 'CLI'
-            projectKey: 'shield0225_G7-HealthTracker'
-            configMode: 'file'
+          - task: SonarCloudAnalyze@1
+            displayName: "Run SonarCloud Analysis"
+            inputs:
+              jdkversion: "JAVA_HOME_17_X64"
 
-        - task: SonarCloudAnalyze@1
-          displayName: 'Run SonarCloud Analysis'
-          inputs:
-            jdkversion: 'JAVA_HOME_17_X64'
-
-        - task: SonarCloudPublish@1
-          displayName: 'Publish Quality Gate Result'
-          inputs:
-            pollingTimeoutSec: '300'
+          - task: SonarCloudPublish@1
+            displayName: "Publish Quality Gate Result"
+            inputs:
+              pollingTimeoutSec: "300"
 
   - stage: Publish
-    displayName: 'Publish Artifacts'
+    displayName: "Publish Artifacts"
     jobs:
       - job: PublishArtifacts
-        displayName: 'Publish Build Artifacts'
+        displayName: "Publish Build Artifacts"
         steps:
-        - task: PublishBuildArtifacts@1
-          inputs:
-            PathtoPublish: '$(Build.SourcesDirectory)/build'
-            ArtifactName: 'build'
-            publishLocation: 'Container'
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: "$(Build.SourcesDirectory)/build"
+              ArtifactName: "build"
+              publishLocation: "Container"
