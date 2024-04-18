@@ -107,7 +107,7 @@ stages:
                     azureSubscription: 'AzureSubscription'  
                     appName: 'DevOps-HealthTracker-Dev'
                     slotName: 'dev'
-                    package: $(Pipeline.Workspace)/node-app  
+                    package: '$(Pipeline.Workspace)/node-app'
 
   - stage: DeployQAT
     displayName: 'Deploy to QAT Environment'
