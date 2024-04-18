@@ -69,13 +69,62 @@ stages:
           inputs:
             pollingTimeoutSec: '300'
 
-  - stage: Deliver
-    displayName: 'Deliver Artifact Stage'
+  - stage: DeployDev
+    displayName: 'Deploy to Dev Environment'
     jobs:
-      - job: DeliverArtifact
-        displayName: 'Deliver Artifact'
-        steps:
-          - script: |
-              echo "Packaging application..."
-              npm run package
-            displayName: 'Package Application'
+      - deployment: DeployDevJob
+        displayName: 'Deployment to Dev'
+        environment: 'development'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    echo "Deploying to Development Server..."
+                    # Mock deployment commands
+                  displayName: 'Deploy to Dev'
+
+  - stage: DeployQAT
+    displayName: 'Deploy to QAT Environment'
+    jobs:
+      - deployment: DeployQATJob
+        displayName: 'Deployment to QAT'
+        environment: 'qat'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    echo "Deploying to QAT Server..."
+                    # Mock deployment commands
+                  displayName: 'Deploy to QAT'
+
+  - stage: DeployStaging
+    displayName: 'Deploy to Staging Environment'
+    jobs:
+      - deployment: DeployStagingJob
+        displayName: 'Deployment to Staging'
+        environment: 'staging'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    echo "Deploying to Staging Server..."
+                    # Mock deployment commands
+                  displayName: 'Deploy to Staging'
+
+  - stage: DeployProd
+    displayName: 'Deploy to Production Environment'
+    jobs:
+      - deployment: DeployProdJob
+        displayName: 'Deployment to Production'
+        environment: 'production'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    echo "Deploying to Production Server..."
+                    # Mock deployment commands
+                  displayName: 'Deploy to Production'
