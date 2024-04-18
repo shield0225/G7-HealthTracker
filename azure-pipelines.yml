@@ -43,11 +43,6 @@ stages:
           displayName: 'Compile Project'
         
         - script: |
-            echo "Listing contents of build directory..."
-            dir "$(Build.SourcesDirectory)\build"
-          displayName: 'List Build Directory Contents'
-
-        - script: |
             echo "Running unit tests and generating code coverage report..."
             npm run test --coverage
           displayName: 'Unit Tests and Code Coverage'
@@ -64,7 +59,7 @@ stages:
         - task: PublishBuildArtifacts@1
           inputs:  
             PathtoPublish: '$(Build.SourcesDirectory)/build'  
-            ArtifactName: 'node_app'
+            ArtifactName: 'node-app'
             publishLocation: 'container'
           displayName: 'Publish Artifact'
 
