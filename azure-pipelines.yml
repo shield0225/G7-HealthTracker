@@ -68,14 +68,13 @@ stages:
           inputs:
             pollingTimeoutSec: '300'
 
-  - stage: Publish
-    displayName: 'Publish Artifacts'
+  - stage: Deliver
+    displayName: 'Deliver Artifact Stage'
     jobs:
-      - job: PublishArtifacts
-        displayName: 'Publish Build Artifacts'
+      - job: DeliverArtifact
+        displayName: 'Deliver Artifact'
         steps:
-        - task: PublishBuildArtifacts@1
-          inputs:
-            PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-            ArtifactName: 'drop'
-            publishLocation: 'Container'
+          - script: |
+              echo "Packaging application..."
+              npm run package
+            displayName: 'Package Application'
