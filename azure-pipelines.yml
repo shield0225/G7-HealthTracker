@@ -43,8 +43,8 @@ stages:
         - script: |
             echo "Running unit tests and generating code coverage report..."
             npm run test --coverage
-            continue-on-error: true
           displayName: 'Unit Tests and Code Coverage'
+          continueOnError: true
 
   - stage: Analyze
     displayName: 'Code Analysis Stage'
