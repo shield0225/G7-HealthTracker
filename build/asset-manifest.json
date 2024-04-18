@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/static/css/main.ed40a43d.css",
+    "main.js": "/static/js/main.89945a73.js",
+    "static/js/453.ed92bab5.chunk.js": "/static/js/453.ed92bab5.chunk.js",
+    "static/media/homepage-photo.jpg": "/static/media/homepage-photo.1c8e6d32f8408caf789b.jpg",
+    "static/media/blood-pressure-icon.svg": "/static/media/blood-pressure-icon.12400ec61a6a8119b5685f425c54eb06.svg",
+    "static/media/material-symbols-light--respiratory-rate.svg": "/static/media/material-symbols-light--respiratory-rate.f9356f1b5124322e58f3e40feb6e1325.svg",
+    "index.html": "/index.html",
+    "main.ed40a43d.css.map": "/static/css/main.ed40a43d.css.map",
+    "main.89945a73.js.map": "/static/js/main.89945a73.js.map",
+    "453.ed92bab5.chunk.js.map": "/static/js/453.ed92bab5.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ed40a43d.css",
+    "static/js/main.89945a73.js"
+  ]
+}
