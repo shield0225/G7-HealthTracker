@@ -38,6 +38,8 @@ stages:
             npm install
             echo "Compiling application using build tool (npm)..."
             npm run build
+            echo "Listing contents of the source directory after build..."
+            dir
           displayName: 'Compile Project'
         
         - script: |
