@@ -69,8 +69,23 @@ stages:
           inputs:
             pollingTimeoutSec: '300'
 
+  - stage: DeliverArtifact
+    displayName: 'Deliver Artifact'
+    jobs:
+      - job: PublishArtifact
+        displayName: 'Publish Artifact'
+        steps:
+        - task: PublishBuildArtifacts@1
+          inputs:  
+            PathtoPublish: '$(Build.SourcesDirectory)/build'  
+            ArtifactName: 'node_app'
+            publishLocation: 'container'
+          displayName: 'Publish Artifact'
+
   - stage: DeployDev
     displayName: 'Deploy to Dev Environment'
+    dependsOn: BuildAndTest
+    condition: succeeded()
     jobs:
       - deployment: DeployDevJob
         displayName: 'Deployment to Dev'
@@ -79,10 +94,16 @@ stages:
           runOnce:
             deploy:
               steps:
-                - script: |
-                    echo "Deploying to Development Server..."
-                    # Mock deployment commands
-                  displayName: 'Deploy to Dev'
+                - download: current
+                  artifact: node-app
+                - task: AzureWebApp@1
+                  displayName: 'Deploy to Azure Web App'
+                  inputs:
+                    appType: webApp
+                    azureSubscription: 'AzureSubscription'  
+                    appName: 'DevOps-HealthTracker-Dev'
+                    slotName: 'dev'
+                    package: $(Pipeline.Workspace)/node-app  
 
   - stage: DeployQAT
     displayName: 'Deploy to QAT Environment'
