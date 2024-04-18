@@ -39,6 +39,11 @@ stages:
             echo "Compiling application using build tool (npm)..."
             npm run build
           displayName: 'Compile Project'
+        
+        - script: |
+            echo "Listing contents of build directory..."
+            dir $(Build.SourcesDirectory)/build
+          displayName: 'List Build Directory Contents'
 
         - script: |
             echo "Running unit tests and generating code coverage report..."
