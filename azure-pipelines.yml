@@ -46,12 +46,10 @@ stages:
           displayName: 'Unit Tests and Code Coverage'
           continueOnError: true
 
-        - task: PublishCodeCoverageResults@1
+        - task: PublishCodeCoverageResults@2
           inputs:
-            codeCoverageTool: 'Cobertura'  
-            summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.cobertura.xml'
-            reportDirectory: '$(System.DefaultWorkingDirectory)/coverage-reports'
-            additionalCodeCoverageFiles: '$(System.DefaultWorkingDirectory)/**/coverage.*.xml'
+            summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/'
+            pathToSources: '$(System.DefaultWorkingDirectory)'
 
   - stage: DeliverArtifact
     displayName: 'Deliver Artifact'
