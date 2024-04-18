@@ -42,7 +42,7 @@ stages:
         
         - script: |
             echo "Listing contents of build directory..."
-            dir $(Build.SourcesDirectory)/build
+            dir "$(Build.SourcesDirectory)\build"
           displayName: 'List Build Directory Contents'
 
         - script: |
