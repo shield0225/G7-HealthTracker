@@ -15,6 +15,7 @@ function Game() {
     return (
         <Container>
             <NavBar />
+            <br>Game page</br>
             <br />
             <Fragment>
                 {!isLoaded && (
