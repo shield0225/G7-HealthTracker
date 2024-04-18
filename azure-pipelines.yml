@@ -38,22 +38,20 @@ stages:
             npm install
             echo "Compiling application using build tool (npm)..."
             npm run build
-            echo "Listing contents of the source directory after build..."
-            dir
           displayName: 'Compile Project'
         
         - script: |
             echo "Running unit tests and generating code coverage report..."
             npm run test:coverage
           displayName: 'Unit Tests and Code Coverage'
-          continueOnError: true    
+          continueOnError: true
 
         - task: PublishCodeCoverageResults@1
           inputs:
-            codeCoverageTool: 'Cobertura'
+            codeCoverageTool: 'Cobertura'  
             summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.cobertura.xml'
             reportDirectory: '$(System.DefaultWorkingDirectory)/coverage-reports'
-            additionalCodeCoverageFiles: '$(System.DefaultWorkingDirectory)/**/coverage.*.xml'  
+            additionalCodeCoverageFiles: '$(System.DefaultWorkingDirectory)/**/coverage.*.xml'
 
   - stage: DeliverArtifact
     displayName: 'Deliver Artifact'
@@ -66,7 +64,7 @@ stages:
         - task: PublishBuildArtifacts@1
           inputs:  
             PathtoPublish: '$(Build.SourcesDirectory)/build'  
-            ArtifactName: 'node-app'
+            ArtifactName: 'node_app'
             publishLocation: 'container'
           displayName: 'Publish Artifact'
 
@@ -108,47 +106,61 @@ stages:
                 - download: current
                   artifact: node-app
                 - task: AzureWebApp@1
-                  displayName: 'Deploy to Azure Web App - dev'
+                  displayName: 'Deploy to Azure Web App'
                   inputs:
                     appType: webApp
                     azureSubscription: 'AzureSubscription'  
                     appName: 'DevOps-HealthTracker-Dev'
                     slotName: 'dev'
-                    package: '$(Pipeline.Workspace)/node-app'
+                    package: $(Pipeline.Workspace)/node-app  
 
   - stage: DeployQAT
     displayName: 'Deploy to QAT Environment'
+    dependsOn: DeployDev
+    condition: succeeded()
     jobs:
       - deployment: DeployQATJob
         displayName: 'Deployment to QAT'
         environment: 'qat'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    echo "Deploying to QAT Server..."
+                    # Mock deployment commands
+                  displayName: 'Deploy to QAT'
 
   - stage: DeployStaging
     displayName: 'Deploy to Staging Environment'
+    dependsOn: DeployQAT
+    condition: succeeded()
     jobs:
       - deployment: DeployStagingJob
         displayName: 'Deployment to Staging'
         environment: 'staging'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    echo "Deploying to Staging Server..."
+                    # Mock deployment commands
+                  displayName: 'Deploy to Staging'
 
   - stage: DeployProd
-    displayName: 'Deploy to Prod Environment'
-    dependsOn: DeliverArtifact
+    displayName: 'Deploy to Production Environment'
+    dependsOn: DeployStaging
     condition: succeeded()
     jobs:
       - deployment: DeployProdJob
-        displayName: 'Deployment to Prod'
+        displayName: 'Deployment to Production'
         environment: 'production'
         strategy:
           runOnce:
             deploy:
               steps:
-                - download: current
-                  artifact: node-app
-                - task: AzureWebApp@1
-                  displayName: 'Deploy to Azure Web App - prod'
-                  inputs:
-                    appType: webApp
-                    azureSubscription: 'AzureSubscription'  
-                    appName: 'DevOps-HealthTracker-Prod'
-                    slotName: 'dev'
-                    package: '$(Pipeline.Workspace)/node-app'
+                - script: |
+                    echo "Deploying to Production Server..."
+                    # Mock deployment commands
+                  displayName: 'Deploy to Production'
