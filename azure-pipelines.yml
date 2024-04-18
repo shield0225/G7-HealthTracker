@@ -38,20 +38,20 @@ stages:
             npm install
             echo "Compiling application using build tool (npm)..."
             npm run build
-            echo "Listing contents of the source directory after build..."
-            dir
           displayName: 'Compile Project'
         
         - script: |
-            echo "Listing contents of build directory..."
-            dir "$(Build.SourcesDirectory)\build"
-          displayName: 'List Build Directory Contents'
-
-        - script: |
             echo "Running unit tests and generating code coverage report..."
-            npm run test --coverage
+            npm run test:coverage
           displayName: 'Unit Tests and Code Coverage'
           continueOnError: true
+
+        - task: PublishCodeCoverageResults@1
+          inputs:
+            codeCoverageTool: 'Cobertura'  
+            summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.cobertura.xml'
+            reportDirectory: '$(System.DefaultWorkingDirectory)/coverage-reports'
+            additionalCodeCoverageFiles: '$(System.DefaultWorkingDirectory)/**/coverage.*.xml'
 
   - stage: DeliverArtifact
     displayName: 'Deliver Artifact'
@@ -116,6 +116,8 @@ stages:
 
   - stage: DeployQAT
     displayName: 'Deploy to QAT Environment'
+    dependsOn: DeployDev
+    condition: succeeded()
     jobs:
       - deployment: DeployQATJob
         displayName: 'Deployment to QAT'
@@ -131,6 +133,8 @@ stages:
 
   - stage: DeployStaging
     displayName: 'Deploy to Staging Environment'
+    dependsOn: DeployQAT
+    condition: succeeded()
     jobs:
       - deployment: DeployStagingJob
         displayName: 'Deployment to Staging'
@@ -146,6 +150,8 @@ stages:
 
   - stage: DeployProd
     displayName: 'Deploy to Production Environment'
+    dependsOn: DeployStaging
+    condition: succeeded()
     jobs:
       - deployment: DeployProdJob
         displayName: 'Deployment to Production'
