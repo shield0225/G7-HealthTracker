@@ -46,6 +46,19 @@ stages:
           displayName: 'Unit Tests and Code Coverage'
           continueOnError: true
 
+  - stage: DeliverArtifact
+    displayName: 'Deliver Artifact'
+    jobs:
+      - job: PublishArtifact
+        displayName: 'Publish Artifact'
+        steps:
+        - task: PublishBuildArtifacts@1
+          inputs:  
+            PathtoPublish: '$(Build.SourcesDirectory)/build'  
+            ArtifactName: 'node_app'
+            publishLocation: 'container'
+          displayName: 'Publish Artifact'
+
   - stage: Analyze
     displayName: 'Code Analysis Stage'
     jobs:
@@ -68,19 +81,6 @@ stages:
         - task: SonarQubePublish@5
           inputs:
             pollingTimeoutSec: '300'
-
-  - stage: DeliverArtifact
-    displayName: 'Deliver Artifact'
-    jobs:
-      - job: PublishArtifact
-        displayName: 'Publish Artifact'
-        steps:
-        - task: PublishBuildArtifacts@1
-          inputs:  
-            PathtoPublish: '$(Build.SourcesDirectory)/build'  
-            ArtifactName: 'node_app'
-            publishLocation: 'container'
-          displayName: 'Publish Artifact'
 
   - stage: DeployDev
     displayName: 'Deploy to Dev Environment'
